@@ -1,0 +1,34 @@
+
+#  Utils
+#  =====
+
+function(zug_target_name_for out_target out_file file)
+  get_filename_component(_extension ${_file} EXT)
+
+  string(REPLACE "${_extension}" "" _name ${file})
+  string(REGEX REPLACE "/" "-" _name ${_name})
+  set(${out_target} "test-${_name}" PARENT_SCOPE)
+
+  string(REPLACE "${_extension}" "" _name ${file})
+  string(REGEX REPLACE "/" "-" _name ${_name})
+  set(${out_file} "${_name}" PARENT_SCOPE)
+endfunction()
+
+#  Targets
+#  =======
+
+add_custom_target(tests COMMENT "Build all the unit tests.")
+add_dependencies(check tests)
+
+file(GLOB_RECURSE zug_unit_tests "*.cpp")
+
+foreach(_file IN LISTS zug_unit_tests)
+  message("found unit test: " ${_file})
+  zug_target_name_for(_target _output "${_file}")
+  add_executable(${_target} EXCLUDE_FROM_ALL "${_file}")
+  set_target_properties(${_target} PROPERTIES OUTPUT_NAME ${_output})
+  add_dependencies(tests ${_target})
+  target_compile_definitions(${_target} PUBLIC CATCH_CONFIG_MAIN)
+  target_link_libraries(${_target} PUBLIC zug-dev)
+  add_test("test/${_output}" ${_output})
+endforeach()
