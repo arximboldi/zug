@@ -19,7 +19,7 @@ namespace zug {
  * @see tuplify
  */
 constexpr auto last = [](auto&&, auto&&... ins) -> decltype(auto) {
-    return tuplify(std::forward<decltype(ins)>(ins)...);
+    return tuplify(ZUG_FWD(ins)...);
 };
 
 } // namespace zug

@@ -14,7 +14,7 @@ namespace zug {
  * Reducing function that always returns the initial state.
  */
 constexpr auto first = [](auto&& st, auto&&...) -> decltype(auto) {
-    return std::forward<decltype(st)>(st);
+    return ZUG_FWD(st);
 };
 
 } // namespace zug
