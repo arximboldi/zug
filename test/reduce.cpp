@@ -9,8 +9,8 @@
 #include <catch2/catch.hpp>
 
 #include <zug/reduce.hpp>
-#include <zug/reducing/first_rf.hpp>
-#include <zug/reducing/last_rf.hpp>
+#include <zug/reducing/first.hpp>
+#include <zug/reducing/last.hpp>
 #include <zug/state_wrapper.hpp>
 
 #include "spies.hpp"
@@ -18,7 +18,7 @@
 TEST_CASE("reduce protects against moved self assignment")
 {
     auto v = std::vector<int>{1, 2, 3, 6};
-    CHECK(zug::reduce(zug::first_rf, v, v) == v);
+    CHECK(zug::reduce(zug::first, v, v) == v);
 }
 
 namespace {
@@ -50,7 +50,7 @@ constexpr auto foo = [](auto step) {
 TEST_CASE("reduce does not construct state wrapper from state")
 {
     auto v = std::vector<int>{1, 2, 3, 6};
-    auto r = zug::reduce(foo(zug::first_rf), 13, v);
+    auto r = zug::reduce(foo(zug::first), 13, v);
     CHECK(r == 13);
 }
 
@@ -61,7 +61,7 @@ TEST_CASE("reduce copies values out of lvalue container")
     auto x      = elem{};
     auto v      = std::vector<elem>{x, x, x, x};
     auto copies = x.copied.count();
-    zug::reduce(zug::last_rf, x, v);
+    zug::reduce(zug::last, x, v);
     CHECK(x.copied.count() == copies + 4);
 }
 
@@ -72,7 +72,7 @@ TEST_CASE("reduce moves values out of rvalue container")
     auto x      = elem{};
     auto v      = std::vector<elem>{x, x, x, x};
     auto copies = x.copied.count();
-    zug::reduce(zug::last_rf, std::move(x), std::move(v));
+    zug::reduce(zug::last, std::move(x), std::move(v));
     CHECK(x.copied.count() == copies);
 }
 
@@ -85,6 +85,6 @@ TEST_CASE("moves values out of rvalue container variadic")
     auto v2     = v1;
     auto init   = std::make_tuple(x, x);
     auto copies = x.copied.count();
-    zug::reduce(zug::last_rf, std::move(init), std::move(v1), std::move(v2));
+    zug::reduce(zug::last, std::move(init), std::move(v1), std::move(v2));
     CHECK(x.copied.count() == copies);
 }

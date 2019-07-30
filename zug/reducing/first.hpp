@@ -8,12 +8,13 @@
 
 #pragma once
 
-#include <zug/tuplify.hpp>
-
 namespace zug {
 
-constexpr auto last_rf = [](auto&&, auto&&... ins) -> decltype(auto) {
-    return tuplify(std::forward<decltype(ins)>(ins)...);
+/*!
+ * Reducing function that always returns the initial state.
+ */
+constexpr auto first = [](auto&& st, auto&&...) -> decltype(auto) {
+    return std::forward<decltype(st)>(st);
 };
 
 } // namespace zug
