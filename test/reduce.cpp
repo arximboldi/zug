@@ -6,16 +6,14 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
+#include <catch2/catch.hpp>
+
 #include <zug/reduce.hpp>
 #include <zug/reducing/first_rf.hpp>
 #include <zug/reducing/last_rf.hpp>
 #include <zug/state_wrapper.hpp>
 
-#include <functional>
-
 #include "spies.hpp"
-
-#include <catch2/catch.hpp>
 
 TEST_CASE("reduce protects against moved self assignment")
 {
