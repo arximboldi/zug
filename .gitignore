@@ -1,5 +1,5 @@
 bazel-*/
-build/*
+build*
 result
 zug/config.hpp
 doc/_build
