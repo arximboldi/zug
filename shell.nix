@@ -1,4 +1,5 @@
-{ nixpkgs ? (import <nixpkgs> {}).fetchFromGitHub {
+{ compiler ? "",
+  nixpkgs ? (import <nixpkgs> {}).fetchFromGitHub {
     owner  = "NixOS";
     repo   = "nixpkgs";
     rev    = "5ac6ab091a4883385e68571425fb7fef4d74c207";
@@ -18,9 +19,16 @@ let
                     };
   old-nixpkgs     = import old-nixpkgs-src {};
   docs            = import ./nix/docs.nix { nixpkgs = old-nixpkgs-src; };
+  compiler-pkg    = if compiler != ""
+                    then pkgs.${compiler}
+                    else stdenv.cc;
+  the-stdenv      = if compiler-pkg.isClang
+                    then clangStdenv
+                    else stdenv;
 
 in
-stdenv.mkDerivation rec {
+
+the-stdenv.mkDerivation rec {
   name = "zug-env";
   buildInputs = [
     cmake
