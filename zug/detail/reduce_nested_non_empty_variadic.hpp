@@ -10,7 +10,7 @@
 
 #include <zug/detail/copy_traits.hpp>
 #include <zug/detail/tuple_utils.hpp>
-#include <zug/meta.hpp>
+#include <zug/meta/pack.hpp>
 #include <zug/state_traits.hpp>
 #include <zug/util.hpp>
 

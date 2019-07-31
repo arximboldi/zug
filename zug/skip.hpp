@@ -66,22 +66,24 @@ struct state_traits<skip_state<SkippedT, CalledT>>
     template <typename T>
     static decltype(auto) complete(T&& s)
     {
-        return ZUG_VISIT([](auto&& x) { return state_complete(ZUG_FWD(x)); },
-                         std::forward<T>(s));
+        return ZUG_VISIT(
+            [](auto&& x) -> SkippedT { return state_complete(ZUG_FWD(x)); },
+            std::forward<T>(s));
     }
 
     template <typename T>
     static decltype(auto) unwrap_all(T&& s)
     {
-        return ZUG_VISIT([](auto&& x) { return state_unwrap_all(ZUG_FWD(x)); },
-                         std::forward<T>(s));
+        return ZUG_VISIT(
+            [](auto&& x) -> SkippedT { return state_unwrap_all(ZUG_FWD(x)); },
+            std::forward<T>(s));
     }
 
     template <typename T, typename U>
     static decltype(auto) rewrap(T&& s, U&& y)
     {
         return ZUG_VISIT(
-            [&](auto&& x) {
+            [&](auto&& x) -> std::decay_t<T> {
                 return state_rewrap(ZUG_FWD(x), std::forward<U>(y));
             },
             std::forward<T>(s));
@@ -116,7 +118,7 @@ struct skip_result_impl
     using error_t       = meta::could_not_find_common_type<skipped_t, called_t>;
 
     using type = std::conditional_t<
-        !std::is_same<common_type_t, error_t>{},
+        !std::is_same<common_type_t, error_t>::value,
         common_type_t,
         skip_state<std::decay_t<skipped_t>, std::decay_t<called_t>>>;
 };
@@ -147,7 +149,7 @@ struct skip_result
     : std::conditional_t<
           is_skip_state<std::decay_t<StateT>>::value,
           meta::identity<std::decay_t<StateT>>,
-          detail::skip_result_impl<ReducingFnT, StateT, InputTs...>>::type
+          detail::skip_result_impl<ReducingFnT, StateT, InputTs...>>
 {};
 
 template <typename ReducingFnT, typename StateT, typename... InputTs>
@@ -205,7 +207,7 @@ auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
                         std::decay_t<StateT>>
 {
     return ZUG_VISIT(
-        [&](auto&& st) {
+        [&](auto&& st) -> std::decay_t<StateT> {
             return std::forward<ReducingFnT>(step)(
                 ZUG_FWD(st), std::forward<InputTs>(ins)...);
         },

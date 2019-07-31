@@ -97,7 +97,7 @@ struct common_type<Acc>
 
 template <typename Acc, typename Next, typename... Rest>
 struct common_type<Acc, Next, Rest...>
-    : common_type<detail::common_type_impl<Acc, Next>, Rest...>
+    : common_type<typename detail::common_type_impl<Acc, Next>::type, Rest...>
 {};
 
 template <typename... Ts>
