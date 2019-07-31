@@ -8,18 +8,21 @@
 
 #pragma once
 
+#include <zug/maybe_reduced.hpp>
 #include <zug/skip.hpp>
 
 namespace zug {
 
-auto filter = [](auto predicate) {
-    return [=](auto step) {
+constexpr auto take_while = [](auto&& predicate) {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) {
             return invoke(predicate, is...)
-                       ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)
-                       : skip(step, ZUG_FWD(s), ZUG_FWD(is)...);
+                       ? not_reduced(call(
+                             step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...))
+                       : reduced(skip(
+                             step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...));
         };
     };
 };
 
-}
+} // namespace zug

@@ -182,7 +182,7 @@ public:
     {
         using step_t = std::decay_t<ReducingFn>;
 
-        return [=](auto st, auto&&... ins) {
+        return [step, xform = xform_](auto st, auto&&... ins) {
             using state_t   = decltype(st);
             using wrapped_t = transducer_state<state_t, step_t, xform_t>;
             using tag_t     = typename wrapped_t::tag;
@@ -191,7 +191,7 @@ public:
                 std::move(st),
                 [&](state_t&& sst) {
                     auto xformed =
-                        comp(xform_, detail::from_any_state<tag_t>)(step);
+                        comp(xform, detail::from_any_state<tag_t>)(step);
                     auto next = xformed(std::move(sst), ZUG_FWD(ins)...);
                     return wrap_state<tag_t>(std::move(next),
                                              std::move(xformed));
