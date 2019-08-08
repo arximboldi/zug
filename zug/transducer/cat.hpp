@@ -16,8 +16,8 @@ namespace zug {
 /*!
  * Similar to clojure.core/cat$1
  */
-constexpr auto cat = [](auto&& step) {
-    return [=](auto&& s, auto&&... is) {
+constexpr auto cat = [](auto step) {
+    return [=](auto&& s, auto&&... is) mutable {
         return reduce_nested(step, ZUG_FWD(s), ZUG_FWD(is)...);
     };
 };

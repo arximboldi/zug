@@ -18,9 +18,14 @@ namespace zug {
  * Reducing function that outputs through the iterator that is carried
  * as state.
  */
-constexpr auto output = [](auto it, auto&&... ins) -> decltype(it) {
-    *it = tuplify(ZUG_FWD(ins)...);
-    return ++it;
-};
+constexpr struct output_t
+{
+    template <typename It, typename... Inputs>
+    It operator()(It it, Inputs&&... ins) const
+    {
+        *it = tuplify(ZUG_FWD(ins)...);
+        return ++it;
+    };
+} output{};
 
 } // namespace zug

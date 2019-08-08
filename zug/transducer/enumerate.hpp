@@ -13,7 +13,7 @@
 
 namespace zug {
 
-auto enumerate_from = [](auto initial) mutable {
+auto enumerate_from = [](auto initial) {
     return [=](auto step) mutable {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), constantly(initial));

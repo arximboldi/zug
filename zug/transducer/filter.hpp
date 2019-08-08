@@ -13,8 +13,8 @@
 namespace zug {
 
 auto filter = [](auto predicate) {
-    return [=](auto step) {
-        return [=](auto&& s, auto&&... is) {
+    return [=](auto step) mutable {
+        return [=](auto&& s, auto&&... is) mutable {
             return invoke(predicate, is...)
                        ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)
                        : skip(step, ZUG_FWD(s), ZUG_FWD(is)...);
