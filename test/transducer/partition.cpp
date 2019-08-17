@@ -51,9 +51,9 @@ TEST_CASE("partition, partition does not copy step function")
 {
     auto step = testing::copy_spy<some_step_fn>{};
 
-    auto v = std::vector<int>{1, 2, 3, 4, 5};
+    auto v = std::vector<int>{1, 2, 3, 4, 5, 7, 8, 9};
     reduce(partition(2u)(step), 0, v);
-    CHECK(step.copied.count() == 2);
+    CHECK(step.copied.count() == 3);
 }
 
 TEST_CASE("partition, partition moves the state through")

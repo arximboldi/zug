@@ -25,7 +25,7 @@ using partition_container_t =
 
 constexpr auto partition = [](auto size) {
     return [=](auto step) mutable {
-        return [size, step = std::move(step)](auto&& s, auto&&... is) mutable {
+        return [=](auto&& s, auto&&... is) mutable {
             auto data         = state_data(ZUG_FWD(s), [&] {
                 auto v = partition_container_t<decltype(is)...>{};
                 v.reserve(size);
