@@ -14,7 +14,7 @@
 namespace zug {
 
 constexpr auto take_while = [](auto predicate) {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return invoke(predicate, is...)
                        ? not_reduced(call(

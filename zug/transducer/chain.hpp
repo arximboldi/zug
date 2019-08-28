@@ -27,15 +27,12 @@ struct chainr_tag
 template <typename InputRange>
 auto chainr(InputRange range)
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
-            auto data = state_data(ZUG_FWD(s), [&] {
-                return std::pair<std::reference_wrapper<decltype(step)>,
-                                 std::reference_wrapper<decltype(range)>>(
-                    step, range);
-            });
+            auto data = state_data(
+                ZUG_FWD(s), [&] { return std::make_pair(&step, &range); });
             return wrap_state<chainr_tag>(
-                data.first(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
+                (*data.first)(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
                 std::move(data));
         };
     };
@@ -56,10 +53,10 @@ auto chain(InputRangeTs&&... rs)
 template <typename T>
 decltype(auto) state_wrapper_complete(chainr_tag, T&& wrapper)
 {
-    return identity_(state_complete(reduce_nested(
-        state_wrapper_data(std::forward<T>(wrapper)).first.get(),
-        state_unwrap(std::forward<T>(wrapper)),
-        state_wrapper_data(std::forward<T>(wrapper)).second.get())));
+    return identity_(state_complete(
+        reduce_nested(*state_wrapper_data(std::forward<T>(wrapper)).first,
+                      state_unwrap(std::forward<T>(wrapper)),
+                      *state_wrapper_data(std::forward<T>(wrapper)).second)));
 }
 
 /*!
@@ -69,7 +66,7 @@ decltype(auto) state_wrapper_complete(chainr_tag, T&& wrapper)
 template <typename InputRange>
 auto chainl(InputRange range)
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using state_t  = decltype(s);
             using result_t = decltype(wrap_state(step(state_unwrap(s), is...)));

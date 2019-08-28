@@ -33,8 +33,8 @@ auto interpose(ValueTs&&... xs)
 {
     // It seems GCC does not like capturing xs directly, causing it to
     // uninitialized usage problems, so we make a tuple out of it..
-    return [value = std::make_tuple(std::forward<ValueTs>(xs)...)](
-               auto step) mutable {
+    return [value =
+                std::make_tuple(std::forward<ValueTs>(xs)...)](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using state_t  = decltype(s);
             using result_t = decltype(wrap_state(step(state_unwrap(s), is...)));

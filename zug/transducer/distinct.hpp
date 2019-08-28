@@ -17,7 +17,7 @@
 
 namespace zug {
 
-constexpr auto distinct = [](auto step) {
+constexpr auto distinct = [](auto&& step) {
     return [=](auto&& s, auto&&... is) mutable {
         using state_t = decltype(s);
         using cache_t =

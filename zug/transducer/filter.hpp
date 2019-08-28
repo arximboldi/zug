@@ -12,8 +12,8 @@
 
 namespace zug {
 
-auto filter = [](auto predicate) {
-    return [=](auto step) mutable {
+auto filter = [](auto&& predicate) {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return invoke(predicate, is...)
                        ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)

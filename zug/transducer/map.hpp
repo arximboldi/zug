@@ -12,8 +12,8 @@
 
 namespace zug {
 
-constexpr auto map = [](auto mapping) {
-    return [=](auto step) mutable {
+constexpr auto map = [](auto&& mapping) {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return step(ZUG_FWD(s), invoke(mapping, ZUG_FWD(is)...));
         };

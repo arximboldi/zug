@@ -17,7 +17,7 @@ namespace zug {
  * Similar to clojure.core/drop$1
  */
 constexpr auto drop = [](auto n) {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [&] { return n; });
             return count != 0 ? wrap_state(skip(step,

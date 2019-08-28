@@ -23,7 +23,7 @@ struct cycle_tag
 template <typename InputRangeT>
 constexpr auto cycle(InputRangeT range)
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::get;
             using std::begin;

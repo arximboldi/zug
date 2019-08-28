@@ -14,7 +14,7 @@
 
 namespace zug {
 
-constexpr auto dedupe = [](auto step) {
+constexpr auto dedupe = [](auto&& step) {
     return [=](auto&& s, auto&&... is) mutable {
         using result_t =
             decltype(wrap_state(step(state_unwrap(s), is...), tuplify(is...)));

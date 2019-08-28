@@ -25,17 +25,12 @@ struct eager_tag
 template <typename Mapping>
 auto eager(Mapping mapping)
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;
-            using data_t =
-                std::tuple<container_t,
-                           std::reference_wrapper<decltype(step)>,
-                           std::reference_wrapper<decltype(mapping)>>;
-
             auto data = state_data(ZUG_FWD(s), [&] {
-                return data_t{container_t{}, step, mapping};
+                return std::make_tuple(container_t{}, &step, &mapping);
             });
             std::get<0>(data).push_back(tuplify(ZUG_FWD(is)...));
             return wrap_state<eager_tag>(state_unwrap(ZUG_FWD(s)),
@@ -48,9 +43,9 @@ template <typename T>
 decltype(auto) state_wrapper_complete(eager_tag, T&& wrapper)
 {
     return identity_(state_complete(reduce_nested(
-        std::get<1>(state_wrapper_data(std::forward<T>(wrapper))).get(),
+        *std::get<1>(state_wrapper_data(std::forward<T>(wrapper))),
         state_unwrap(std::forward<T>(wrapper)),
-        std::get<2>(state_wrapper_data(std::forward<T>(wrapper)))(
+        (*std::get<2>(state_wrapper_data(std::forward<T>(wrapper))))(
             std::get<0>(state_wrapper_data(std::forward<T>(wrapper)))))));
 }
 

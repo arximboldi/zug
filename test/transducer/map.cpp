@@ -28,8 +28,8 @@ int free_times2(int x) { return x * 2; }
 
 } // anonymous namespace
 
-TEST_CASE("map, mapping_invoke")
+TEST_CASE("map, mapping invoke")
 {
     auto v = std::vector<int>{1, 2, 3, 6};
-    CHECK(transduce(map(free_times2), std::plus<int>{}, 1, v) == 25);
+    CHECK(transduce(map(&free_times2), std::plus<int>{}, 1, v) == 25);
 }

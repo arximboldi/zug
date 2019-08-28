@@ -45,7 +45,7 @@ bool free_lt4(int x) { return x < 4; }
 TEST_CASE("drop_while, invoke")
 {
     auto v   = std::vector<int>{1, 2, 3, 4, 3};
-    auto res = into_vector(drop_while(free_lt4), v);
+    auto res = into_vector(drop_while(&free_lt4), v);
     CHECK(res == (decltype(res){4, 3}));
 }
 

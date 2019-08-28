@@ -37,7 +37,7 @@ auto interleave_step(StepT&& step, StateT&& s, InputT&& i, InputTs&&... is)
 
 } // namespace detail
 
-constexpr auto interleave = [](auto step) {
+constexpr auto interleave = [](auto&& step) {
     return [=](auto&& s, auto&& i, auto&&... is) mutable {
         return detail::interleave_step(
             step, step(ZUG_FWD(s), ZUG_FWD(i)), ZUG_FWD(is)...);

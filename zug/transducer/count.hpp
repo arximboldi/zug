@@ -22,7 +22,7 @@ namespace zug {
 template <typename InitT = std::size_t, typename DeltaT = InitT>
 constexpr auto count(InitT init = InitT{0}, DeltaT delta = DeltaT{1})
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [=] { return init; });
             auto next  = count;

@@ -25,7 +25,7 @@ struct partition_by_tag
 template <typename MappingT>
 auto partition_by(MappingT&& mapping)
 {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;

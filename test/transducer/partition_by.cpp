@@ -35,7 +35,7 @@ TEST_CASE("partition_by, invoke")
 {
     auto v = std::vector<int>{1, 1, 2, 4, 2, 3};
 
-    auto res = into_vector(partition_by(free_mod2), v);
+    auto res = into_vector(partition_by(&free_mod2), v);
     CHECK(res == (decltype(res){{1, 1}, {2, 4, 2}, {3}}));
 }
 
@@ -45,7 +45,7 @@ TEST_CASE("partition_by, partition_by does not copy step function")
 
     auto v = std::vector<int>{1, 2, 3, 4, 5, 7, 8, 9};
     reduce(partition_by(identity)(step), 0, v);
-    CHECK(step.copied.count() == 3);
+    CHECK(step.copied.count() == 2);
 }
 
 TEST_CASE("partition_by, partition by moves the state through")

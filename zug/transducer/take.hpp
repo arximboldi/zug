@@ -24,7 +24,7 @@ bool state_wrapper_data_is_reduced(take_tag, T&& n)
 }
 
 constexpr auto take = [](auto n) {
-    return [=](auto step) mutable {
+    return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return wrap_state<take_tag>(
                 step(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),

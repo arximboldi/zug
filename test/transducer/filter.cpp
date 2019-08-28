@@ -30,7 +30,7 @@ using namespace zug;
 TEST_CASE("filter, invoke")
 {
     auto v   = std::vector<int>{1, 2, 3, 6};
-    auto res = transduce(filter(free_odd), std::plus<int>{}, 1, v);
+    auto res = transduce(filter(&free_odd), std::plus<int>{}, 1, v);
     CHECK(res == 9);
 }
 

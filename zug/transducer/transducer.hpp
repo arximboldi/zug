@@ -55,7 +55,7 @@ auto state_wrapper_rewrap(transducer_tag<C, R>, T&& s, U&& x) -> std::decay_t<T>
 
 // this is the actual transducer that is used at the end of the chain
 template <typename TagT>
-constexpr auto from_any_state = [](auto step) {
+constexpr auto from_any_state = [](auto&& step) {
     return [=](any_state st, auto&&... ins) mutable {
         using reduce_t   = typename TagT::reduce_t;
         using complete_t = typename TagT::complete_t;
