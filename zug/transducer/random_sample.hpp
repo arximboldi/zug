@@ -46,6 +46,9 @@ struct random_sampler
 
 } // namespace detail
 
+/*!
+ * Similar to clojure.core/random-sample$1
+ */
 template <typename ProbabilityT,
           typename GeneratorT = detail::default_generator>
 auto random_sample(ProbabilityT prob, GeneratorT gen = GeneratorT{})

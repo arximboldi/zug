@@ -12,6 +12,9 @@
 
 namespace zug {
 
+/*!
+ * Similar to clojure.core/map$1
+ */
 constexpr auto map = [](auto&& mapping) {
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
