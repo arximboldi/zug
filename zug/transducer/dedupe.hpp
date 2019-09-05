@@ -16,32 +16,21 @@ namespace zug {
 
 constexpr auto dedupe = [](auto&& step) {
     return [=](auto&& s, auto&&... is) mutable {
-        using result_t =
-            decltype(wrap_state(step(state_unwrap(s), is...), tuplify(is...)));
-        using complete_t = decltype(state_complete(s));
-        using state_t    = decltype(s);
-        using wrapped_t = detail::copy_decay_t<state_t, std::decay_t<result_t>>;
-        using unwrapped_t =
-            detail::copy_decay_t<state_t, std::decay_t<complete_t>>;
-
         return with_state(
             ZUG_FWD(s),
-            [&](unwrapped_t&& st) {
+            [&](auto&& st) {
                 auto last = tuplify(is...);
                 return wrap_state(
-                    step(state_unwrap(std::forward<unwrapped_t>(st)),
-                         ZUG_FWD(is)...),
+                    step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...),
                     std::move(last));
             },
-            [&](wrapped_t&& st) {
+            [&](auto&& st) {
                 auto next = tuplify(is...);
                 auto dupe = next == state_wrapper_data(st);
-                return dupe
-                           ? std::forward<wrapped_t>(st)
-                           : wrap_state(
-                                 step(state_unwrap(std::forward<wrapped_t>(st)),
-                                      ZUG_FWD(is)...),
-                                 std::move(next));
+                return dupe ? ZUG_FWD(st)
+                            : wrap_state(step(state_unwrap(ZUG_FWD(st)),
+                                              ZUG_FWD(is)...),
+                                         std::move(next));
             });
     };
 };

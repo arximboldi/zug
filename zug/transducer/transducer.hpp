@@ -189,16 +189,16 @@ public:
 
             return with_state(
                 std::move(st),
-                [&](state_t&& sst) {
+                [&](auto&& sst) {
                     auto xformed =
                         comp(xform, detail::from_any_state<tag_t>)(step);
-                    auto next = xformed(std::move(sst), ZUG_FWD(ins)...);
+                    auto next = xformed(ZUG_FWD(sst), ZUG_FWD(ins)...);
                     return wrap_state<tag_t>(std::move(next),
                                              std::move(xformed));
                 },
-                [&](wrapped_t&& sst) {
-                    auto next = state_wrapper_data(sst)(
-                        std::move(state_unwrap(sst)), ZUG_FWD(ins)...);
+                [&](auto&& sst) {
+                    auto next = state_wrapper_data(ZUG_FWD(sst))(
+                        std::move(state_unwrap(ZUG_FWD(sst))), ZUG_FWD(ins)...);
                     state_unwrap(sst) = std::move(next);
                     return std::move(sst);
                 });

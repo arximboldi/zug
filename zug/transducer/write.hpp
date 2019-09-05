@@ -64,30 +64,18 @@ auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)
         return [=](auto&& s, auto&&... is) mutable {
             using std::begin;
             using std::end;
-
-            using result_t = decltype(wrap_state(step(state_unwrap(s), is...)));
-            using complete_t = decltype(state_complete(s));
-
-            using state_t = decltype(s);
-            using wrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<result_t>>;
-            using unwrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<complete_t>>;
-
             auto& stream = stream_ref.get();
             return with_state(
                 ZUG_FWD(s),
-                [&](unwrapped_t&& st) {
+                [&](auto&& st) {
                     detail::write_inputs(stream, arg_sep, is...);
-                    return wrap_state(
-                        step(std::forward<unwrapped_t>(st), ZUG_FWD(is)...));
+                    return wrap_state(step(ZUG_FWD(st), ZUG_FWD(is)...));
                 },
-                [&](wrapped_t&& st) {
+                [&](auto&& st) {
                     stream << in_sep;
                     detail::write_inputs(stream, arg_sep, is...);
                     return wrap_state(
-                        step(state_unwrap(std::forward<wrapped_t>(st)),
-                             ZUG_FWD(is)...));
+                        step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...));
                 });
         };
     };

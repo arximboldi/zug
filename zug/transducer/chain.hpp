@@ -68,33 +68,21 @@ auto chainl(InputRange range)
 {
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
-            using state_t  = decltype(s);
-            using result_t = decltype(wrap_state(step(state_unwrap(s), is...)));
-            using complete_t = decltype(state_complete(s));
-            using wrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<result_t>>;
-            using unwrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<complete_t>>;
-
             return with_state(
                 ZUG_FWD(s),
-                [&](unwrapped_t&& st) {
+                [&](auto&& st) {
                     using std::begin;
                     using std::end;
                     return wrap_state(
                         begin(range) != end(range)
                             ? step(detail::reduce_nested_non_empty(
-                                       step,
-                                       std::forward<unwrapped_t>(st),
-                                       range),
+                                       step, ZUG_FWD(st), range),
                                    ZUG_FWD(is)...)
-                            : step(std::forward<unwrapped_t>(st),
-                                   ZUG_FWD(is)...));
+                            : step(ZUG_FWD(st), ZUG_FWD(is)...));
                 },
-                [&](wrapped_t&& st) {
+                [&](auto&& st) {
                     return wrap_state(
-                        step(state_unwrap(std::forward<wrapped_t>(st)),
-                             ZUG_FWD(is)...));
+                        step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...));
                 });
         };
     };

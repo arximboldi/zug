@@ -33,38 +33,31 @@ auto interpose(ValueTs&&... xs)
 {
     // It seems GCC does not like capturing xs directly, causing it to
     // uninitialized usage problems, so we make a tuple out of it..
-    return [value =
-                std::make_tuple(std::forward<ValueTs>(xs)...)](auto&& step) {
-        return [=](auto&& s, auto&&... is) mutable {
-            using state_t  = decltype(s);
-            using result_t = decltype(wrap_state(step(state_unwrap(s), is...)));
-            using complete_t = decltype(state_complete(s));
-            using wrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<result_t>>;
-            using unwrapped_t =
-                detail::copy_decay_t<state_t, std::decay_t<complete_t>>;
-            return with_state(
-                ZUG_FWD(s),
-                [&](unwrapped_t&& st) {
-                    return wrap_state(
-                        step(std::forward<unwrapped_t>(st), ZUG_FWD(is)...));
-                },
-                [&](wrapped_t&& st) {
-                    // We can not use our implementation of std::apply included
-                    // in zug/compat/apply.hpp because GCC crashes, lol.
-                    auto next = detail::interp(
-                        step,
-                        state_unwrap(std::forward<wrapped_t>(st)),
-                        value,
-                        std::make_index_sequence<
-                            std::tuple_size<decltype(value)>::value>{});
-                    return wrap_state(
-                        !state_is_reduced(next)
-                            ? step(std::move(next), ZUG_FWD(is)...)
-                            : std::move(next));
-                });
+    return
+        [value = std::make_tuple(std::forward<ValueTs>(xs)...)](auto&& step) {
+            return [=](auto&& s, auto&&... is) mutable {
+                return with_state(
+                    ZUG_FWD(s),
+                    [&](auto&& st) {
+                        return wrap_state(step(ZUG_FWD(st), ZUG_FWD(is)...));
+                    },
+                    [&](auto&& st) {
+                        // We can not use our implementation of std::apply
+                        // included in zug/compat/apply.hpp because GCC crashes,
+                        // lol.
+                        auto next = detail::interp(
+                            step,
+                            state_unwrap(ZUG_FWD(st)),
+                            value,
+                            std::make_index_sequence<
+                                std::tuple_size<decltype(value)>::value>{});
+                        return wrap_state(
+                            !state_is_reduced(next)
+                                ? step(std::move(next), ZUG_FWD(is)...)
+                                : std::move(next));
+                    });
+            };
         };
-    };
 }
 
 } // namespace zug
