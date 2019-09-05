@@ -17,7 +17,7 @@ namespace zug {
  */
 constexpr struct first_t
 {
-    template <typename StateT, typename Xs>
+    template <typename StateT, typename... Xs>
     decltype(auto) operator()(StateT&& st, Xs&&...) const
     {
         return ZUG_FWD(st);
