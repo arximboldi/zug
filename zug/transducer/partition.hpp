@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <zug/detail/lambda_wrapper.hpp>
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/tuplify.hpp>
 
 #include <vector>
 
@@ -29,7 +31,7 @@ constexpr auto partition = [](auto size) {
             auto data         = state_data(ZUG_FWD(s), [&] {
                 auto v = partition_container_t<decltype(is)...>{};
                 v.reserve(size);
-                return make_tuple(std::move(v), step);
+                return make_tuple(std::move(v), detail::wrap_lambda(step));
             });
             auto& next_vector = std::get<0>(data);
             auto& next_step   = std::get<1>(data);
