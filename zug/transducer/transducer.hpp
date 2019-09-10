@@ -54,8 +54,9 @@ auto state_wrapper_rewrap(transducer_tag<C, R>, T&& s, U&& x) -> std::decay_t<T>
 }
 
 // this is the actual transducer that is used at the end of the chain
-template <typename TagT>
-constexpr auto from_any_state = [](auto&& step) {
+template <typename TagT, typename StepT>
+auto from_any_state(StepT&& step)
+{
     return [=](any_state st, auto&&... ins) mutable {
         using reduce_t   = typename TagT::reduce_t;
         using complete_t = typename TagT::complete_t;
@@ -70,7 +71,7 @@ constexpr auto from_any_state = [](auto&& step) {
         }
         return st;
     };
-};
+}
 
 template <typename... ArgTs>
 struct get_reducing_fn
@@ -190,9 +191,8 @@ public:
             return with_state(
                 std::move(st),
                 [&](auto&& sst) {
-                    auto xformed =
-                        comp(xform, detail::from_any_state<tag_t>)(step);
-                    auto next = xformed(ZUG_FWD(sst), ZUG_FWD(ins)...);
+                    auto xformed = xform(detail::from_any_state<tag_t>(step));
+                    auto next    = xformed(ZUG_FWD(sst), ZUG_FWD(ins)...);
                     return wrap_state<tag_t>(std::move(next),
                                              std::move(xformed));
                 },
