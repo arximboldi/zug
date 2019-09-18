@@ -1,4 +1,3 @@
-
 #  Utils
 #  =====
 
@@ -20,7 +19,10 @@ endfunction()
 add_custom_target(tests COMMENT "Build all the unit tests.")
 add_dependencies(check tests)
 
+add_subdirectory(__inline_var_tests)
+
 file(GLOB_RECURSE zug_unit_tests "*.cpp")
+list(FILTER zug_unit_tests EXCLUDE REGEX "${CURRENT_CMAKE_DIRECTORY}/__*")
 
 foreach(_file IN LISTS zug_unit_tests)
   message("found unit test: " ${_file})
