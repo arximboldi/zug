@@ -13,9 +13,9 @@
 namespace zug {
 namespace detail {
 
-struct to_be_inlined {};
+struct to_be_inlined{};
 
-static constexpr auto& inline_var = zug::detail::make_inline_var<to_be_inlined>();
+DETAIL_ZUG_INLINE_CONSTEXPR auto inline_var = to_be_inlined{};
 
 } // namespace detail
 } // namespace zug
