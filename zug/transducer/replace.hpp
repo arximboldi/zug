@@ -20,14 +20,14 @@ struct lookup_or_key
     TableT table;
 
     template <typename KeyT>
-    auto operator()(const KeyT& k) -> const KeyT&
+    auto operator()(const KeyT& k) const -> const KeyT&
     {
         auto elem = table.find(k);
         return elem == table.end() ? k : elem->second;
     }
 
     template <typename K1T, typename K2T, typename... KTs>
-    auto operator()(K1T&& k1, K2T&& k2, KTs&&... ks)
+    auto operator()(K1T&& k1, K2T&& k2, KTs&&... ks) const
     {
         auto key  = std::make_tuple(std::forward<K1T>(k1),
                                    std::forward<K2T>(k2),
@@ -52,7 +52,7 @@ auto replace(TableT&& table)
  * Transducer that replaces all elements by `table[tuplify(inputs)]`
  */
 template <typename TableT>
-auto replace_all(TableT&& table)
+auto replace_all(TableT table)
 {
     return map(
         [=](auto&&... ks) mutable { return table[tuplify(ZUG_FWD(ks)...)]; });

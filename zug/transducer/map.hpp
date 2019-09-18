@@ -16,8 +16,8 @@ namespace zug {
  * Similar to clojure.core/map$1
  */
 constexpr auto map = [](auto&& mapping) {
-    return [=](auto&& step) {
-        return [=](auto&& s, auto&&... is) mutable {
+    return [=](auto step) {
+        return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
             return step(ZUG_FWD(s), invoke(mapping, ZUG_FWD(is)...));
         };
     };
