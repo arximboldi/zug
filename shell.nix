@@ -33,6 +33,7 @@ the-stdenv.mkDerivation rec {
   buildInputs = [
     cmake
     boost
+    ccache
   ];
   shellHook = ''
     export ZUG_ROOT=`dirname ${toString ./shell.nix}`

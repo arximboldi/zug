@@ -20,6 +20,16 @@ option(zug_BUILD_DOCS "Build docs" ON)
 #  Targets
 #  =======
 
+# ccache support
+find_program(CCACHE ccache)
+if (CCACHE)
+  message(STATUS "Using ccache: ${CCACHE}")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE})
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE})
+else()
+  message(STATUS "Could not find ccache")
+endif()
+
 # the library
 add_library(zug INTERFACE)
 target_include_directories(zug INTERFACE
