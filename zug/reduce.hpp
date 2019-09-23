@@ -6,10 +6,6 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
-/*!
- * @file
- */
-
 #pragma once
 
 #include <zug/detail/is_non_empty.hpp>

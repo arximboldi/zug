@@ -8,11 +8,19 @@
 
 #pragma once
 
+#include <zug/transducer/cat.hpp>
+#include <zug/transducer/map.hpp>
+#include <zug/util.hpp>
+
 namespace zug {
 
-constexpr auto first_rf = [](auto&& st, auto&&...) -> decltype(st)&&
+/*!
+ * Similar to clojure.core/mapcat$1
+ */
+template <typename MappingT>
+auto mapcat(MappingT&& mapping)
 {
-    return std::forward<decltype(st)>(st);
-};
+    return comp(cat, map(std::forward<MappingT>(mapping)));
+}
 
 } // namespace zug

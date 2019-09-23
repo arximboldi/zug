@@ -32,6 +32,8 @@ the-stdenv.mkDerivation rec {
   name = "zug-env";
   buildInputs = [
     cmake
+    boost
+    ccache
   ];
   shellHook = ''
     export ZUG_ROOT=`dirname ${toString ./shell.nix}`

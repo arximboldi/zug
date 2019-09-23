@@ -9,7 +9,7 @@
 #include "resources/client1.hpp"
 #include "resources/client2.hpp"
 
-#include <zug/detail/inline_var.hpp>
+#include <zug/detail/inline_constexpr.hpp>
 
 #include <catch2/catch.hpp>
 
@@ -17,5 +17,5 @@ using namespace zug::detail;
 
 TEST_CASE("inline_var: variable included in two files has same address")
 {
-    CHECK( client1::address_of_inline_var() == client2::address_of_inline_var() );
+    CHECK(client1::address_of_inline_var() == client2::address_of_inline_var());
 }

@@ -8,13 +8,15 @@
 
 #pragma once
 
+#include <zug/detail/inline_constexpr.hpp>
+
 namespace zug {
 
 /*!
  * Function that forwards its argument if only one element passed,
  * otherwise it makes a tuple.
  */
-constexpr struct tuplify_t
+ZUG_INLINE_CONSTEXPR struct tuplify_t
 {
     constexpr std::tuple<> operator()() const { return {}; };
 

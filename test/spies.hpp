@@ -203,7 +203,9 @@ struct copy_spy : BaseT
 
     spy_fn<> copied;
 
-    copy_spy()           = default;
+    copy_spy(BaseT base = {})
+        : BaseT{std::move(base)}
+    {}
     copy_spy(copy_spy&&) = default;
     copy_spy& operator=(copy_spy&&) = default;
 
