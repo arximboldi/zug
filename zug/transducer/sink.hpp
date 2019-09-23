@@ -46,7 +46,7 @@ auto sink(ActionT&& action)
 {
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
-            invoke(action, ZUG_FWD(is)...);
+            compat::invoke(action, ZUG_FWD(is)...);
             return step(ZUG_FWD(s));
         };
     };

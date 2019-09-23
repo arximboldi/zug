@@ -30,7 +30,7 @@ auto partition_by(MappingT&& mapping)
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;
 
-            auto mapped = invoke(mapping, ZUG_FWD(is)...);
+            auto mapped = compat::invoke(mapping, ZUG_FWD(is)...);
             auto data   = state_data(ZUG_FWD(s), [&] {
                 auto v = container_t{};
                 return make_tuple(mapped, std::move(v), step);

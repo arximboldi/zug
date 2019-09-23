@@ -61,17 +61,18 @@ struct composed
     template <class... T>
     decltype(auto) operator()(T&&... xs) &
     {
-        return invoke(f, invoke(g, std::forward<T>(xs)...));
+        return compat::invoke(f, compat::invoke(g, std::forward<T>(xs)...));
     }
     template <class... T>
     decltype(auto) operator()(T&&... xs) const&
     {
-        return invoke(f, invoke(g, std::forward<T>(xs)...));
+        return compat::invoke(f, compat::invoke(g, std::forward<T>(xs)...));
     }
     template <class... T>
     decltype(auto) operator()(T&&... xs) &&
     {
-        return invoke(std::move(f), invoke(g, std::forward<T>(xs)...));
+        return compat::invoke(std::move(f),
+                              compat::invoke(g, std::forward<T>(xs)...));
     }
 };
 

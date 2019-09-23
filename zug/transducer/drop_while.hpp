@@ -23,7 +23,7 @@ constexpr auto drop_while(PredicateT&& predicate)
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto taking = state_data(ZUG_FWD(s), [] { return false; }) ||
-                          !invoke(predicate, is...);
+                          !compat::invoke(predicate, is...);
 
             return wrap_state(
                 taking ? call(step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...)

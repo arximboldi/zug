@@ -9,6 +9,8 @@
 #pragma once
 
 namespace zug {
+namespace compat {
+
 namespace detail {
 
 #define ZUG_DETAIL_DECLTYPE_RETURN(body_expr)                                  \
@@ -48,4 +50,5 @@ decltype(auto) invoke(F&& f, ArgTypes&&... args)
                              std::forward<ArgTypes>(args)...);
 }
 
+} // namespace compat
 } // namespace zug

@@ -12,12 +12,12 @@ namespace zug {
 
 namespace detail {
 
-template <
-    class F,
-    class Tuple,
-    std::enable_if_t<std::is_same<detail::get_index_sequence_t<Tuple>,
-                                  detail::could_not_get_index_sequence>::value,
-                     int> = 0>
+template <class F,
+          class Tuple,
+          std::enable_if_t<
+              std::is_same<compat::detail::get_index_sequence_t<Tuple>,
+                           compat::detail::could_not_get_index_sequence>::value,
+              int> = 0>
 decltype(auto) apply_if_you_can_bitte(F&& f, Tuple&& t)
 {
     return std::forward<F>(f)(std::forward<Tuple>(t));
@@ -26,12 +26,13 @@ decltype(auto) apply_if_you_can_bitte(F&& f, Tuple&& t)
 template <
     class F,
     class Tuple,
-    std::enable_if_t<!std::is_same<detail::get_index_sequence_t<Tuple>,
-                                   detail::could_not_get_index_sequence>::value,
-                     int> = 0>
+    std::enable_if_t<
+        !std::is_same<compat::detail::get_index_sequence_t<Tuple>,
+                      compat::detail::could_not_get_index_sequence>::value,
+        int> = 0>
 constexpr decltype(auto) apply_if_you_can_bitte(F&& f, Tuple&& t)
 {
-    return apply(std::forward<F>(f), std::forward<Tuple>(t));
+    return compat::apply(std::forward<F>(f), std::forward<Tuple>(t));
 }
 
 template <typename Fn>

@@ -12,6 +12,7 @@
 #include <zug/meta/util.hpp>
 
 namespace zug {
+namespace compat {
 
 namespace detail {
 
@@ -82,4 +83,5 @@ constexpr decltype(auto) apply(F&& f, Tuple&& t)
                               detail::get_index_sequence_t<Tuple>{});
 }
 
+} // namespace compat
 } // namespace zug

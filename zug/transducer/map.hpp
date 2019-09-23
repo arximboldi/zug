@@ -20,7 +20,7 @@ constexpr auto map(MappingT&& mapping)
 {
     return [=](auto step) {
         return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
-            return step(ZUG_FWD(s), invoke(mapping, ZUG_FWD(is)...));
+            return step(ZUG_FWD(s), compat::invoke(mapping, ZUG_FWD(is)...));
         };
     };
 }

@@ -18,7 +18,7 @@ constexpr auto take_while(PredicateT predicate)
 {
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
-            return invoke(predicate, is...)
+            return compat::invoke(predicate, is...)
                        ? not_reduced(call(
                              step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...))
                        : reduced(skip(

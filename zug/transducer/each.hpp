@@ -22,7 +22,7 @@ constexpr auto each(ActionT&& action)
 {
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
-            invoke(action, is...);
+            compat::invoke(action, is...);
             return step(ZUG_FWD(s), ZUG_FWD(is)...);
         };
     };
