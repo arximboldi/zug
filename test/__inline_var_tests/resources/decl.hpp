@@ -8,14 +8,15 @@
 
 #pragma once
 
-#include <zug/detail/inline_var.hpp>
+#include <zug/detail/inline_constexpr.hpp>
 
 namespace zug {
 namespace detail {
 
-struct to_be_inlined{};
+struct to_be_inlined
+{};
 
-DETAIL_ZUG_INLINE_CONSTEXPR auto inline_var = to_be_inlined{};
+ZUG_INLINE_CONSTEXPR auto inline_var = to_be_inlined{};
 
 } // namespace detail
 } // namespace zug
