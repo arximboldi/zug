@@ -16,7 +16,9 @@ namespace zug {
 /*!
  * Similar to clojure.core/take_nth$1
  */
-auto take_nth = [](auto nth) {
+template <typename IntegralT>
+auto take_nth(IntegralT nth)
+{
     return [=](auto step) {
         return [=](auto&& s, auto&&... is) mutable {
             return with_state(

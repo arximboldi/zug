@@ -37,11 +37,16 @@ auto interleave_step(StepT&& step, StateT&& s, InputT&& i, InputTs&&... is)
 
 } // namespace detail
 
-constexpr auto interleave = [](auto&& step) {
-    return [=](auto&& s, auto&& i, auto&&... is) mutable {
-        return detail::interleave_step(
-            step, step(ZUG_FWD(s), ZUG_FWD(i)), ZUG_FWD(is)...);
-    };
-};
+ZUG_INLINE_CONSTEXPR struct interleave_t
+{
+    template <typename StepT>
+    auto operator()(StepT&& step) const
+    {
+        return [=](auto&& s, auto&& i, auto&&... is) mutable {
+            return detail::interleave_step(
+                step, step(ZUG_FWD(s), ZUG_FWD(i)), ZUG_FWD(is)...);
+        };
+    }
+} interleave{};
 
 } // namespace zug

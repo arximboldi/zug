@@ -16,7 +16,9 @@ namespace zug {
 /*!
  * Similar to clojure.core/drop$1
  */
-constexpr auto drop = [](auto n) {
+template <typename IntegralT>
+constexpr auto drop(IntegralT n)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [&] { return n; });
@@ -30,6 +32,6 @@ constexpr auto drop = [](auto n) {
                                            count);
         };
     };
-};
+}
 
 } // namespace zug

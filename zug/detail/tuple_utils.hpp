@@ -18,7 +18,7 @@ template <std::size_t Index, std::size_t Max>
 struct tuple_all_neq_t
 {
     template <typename Tuple1T, typename Tuple2T>
-    bool operator()(Tuple1T&& t1, Tuple2T&& t2)
+    bool operator()(Tuple1T&& t1, Tuple2T&& t2) const
     {
         return std::get<Index>(std::forward<Tuple1T>(t1)) !=
                    std::get<Index>(std::forward<Tuple2T>(t2)) &&
@@ -31,7 +31,7 @@ template <std::size_t Max>
 struct tuple_all_neq_t<Max, Max>
 {
     template <typename Tuple1T, typename Tuple2T>
-    bool operator()(Tuple1T&&, Tuple2T&&)
+    bool operator()(Tuple1T&&, Tuple2T&&) const
     {
         return true;
     }

@@ -60,12 +60,17 @@ auto apply_all_what_you_can_bitte(Fn&& fn, Tuple&& t, Tuples&&... ts)
  * Transducer that expands all unzipable inputs into the transducer. Unzipable
  * inputs are std::tuple<>, std::pair<> and std::array<>.
  */
-auto unzip = [](auto&& step) {
-    return [=](auto&& s, auto&&... is) mutable {
-        return detail::apply_all_what_you_can_bitte(
-            [&](auto&&... xs) { return step(ZUG_FWD(s), ZUG_FWD(xs)...); },
-            ZUG_FWD(is)...);
-    };
-};
+ZUG_INLINE_CONSTEXPR struct unzip_t
+{
+    template <typename StepT>
+    auto operator()(StepT&& step) const
+    {
+        return [=](auto&& s, auto&&... is) mutable {
+            return detail::apply_all_what_you_can_bitte(
+                [&](auto&&... xs) { return step(ZUG_FWD(s), ZUG_FWD(xs)...); },
+                ZUG_FWD(is)...);
+        };
+    }
+} unzip{};
 
 } // namespace zug

@@ -36,7 +36,7 @@ struct sequence_data
     struct step_t
     {
         template <typename... Ts>
-        state_t operator()(state_t s, Ts&&... xs)
+        state_t operator()(state_t s, Ts&&... xs) const
         {
             s->impl_.cache.emplace_back(std::forward<Ts>(xs)...);
             return s;

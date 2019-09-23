@@ -17,13 +17,15 @@ namespace zug {
  * Transducer that evaluates `action` on each input, forwarding the
  * input down the original inputs down the transducer chain.
  */
-constexpr auto each = [](auto&& action) {
+template <typename ActionT>
+constexpr auto each(ActionT&& action)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             invoke(action, is...);
             return step(ZUG_FWD(s), ZUG_FWD(is)...);
         };
     };
-};
+}
 
 } // namespace zug

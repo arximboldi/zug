@@ -16,9 +16,7 @@ namespace zug {
 /*!
  * Transducer that, if more than one argument is passed, forwards all
  * of them as a single tuple.
- *
- * @todo This should a `constexpr` in C++14
  */
-auto zip = map(tuplify);
+ZUG_INLINE_CONSTEXPR auto zip = map(tuplify);
 
 } // namespace zug

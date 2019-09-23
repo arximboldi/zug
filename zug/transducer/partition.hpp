@@ -25,7 +25,9 @@ template <typename... InputTs>
 using partition_container_t =
     std::vector<std::decay_t<decltype(tuplify(std::declval<InputTs>()...))>>;
 
-constexpr auto partition = [](auto size) {
+template <typename SizeT>
+auto partition(SizeT size)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto data         = state_data(ZUG_FWD(s), [&] {

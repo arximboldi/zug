@@ -14,25 +14,30 @@
 
 namespace zug {
 
-constexpr auto dedupe = [](auto&& step) {
-    return [=](auto&& s, auto&&... is) mutable {
-        return with_state(
-            ZUG_FWD(s),
-            [&](auto&& st) {
-                auto last = tuplify(is...);
-                return wrap_state(
-                    step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...),
-                    std::move(last));
-            },
-            [&](auto&& st) {
-                auto next = tuplify(is...);
-                auto dupe = next == state_wrapper_data(st);
-                return dupe ? ZUG_FWD(st)
-                            : wrap_state(step(state_unwrap(ZUG_FWD(st)),
-                                              ZUG_FWD(is)...),
-                                         std::move(next));
-            });
-    };
-};
+ZUG_INLINE_CONSTEXPR struct dedupe_t
+{
+    template <typename StepT>
+    auto operator()(StepT&& step) const
+    {
+        return [=](auto&& s, auto&&... is) mutable {
+            return with_state(
+                ZUG_FWD(s),
+                [&](auto&& st) {
+                    auto last = tuplify(is...);
+                    return wrap_state(
+                        step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...),
+                        std::move(last));
+                },
+                [&](auto&& st) {
+                    auto next = tuplify(is...);
+                    auto dupe = next == state_wrapper_data(st);
+                    return dupe ? ZUG_FWD(st)
+                                : wrap_state(step(state_unwrap(ZUG_FWD(st)),
+                                                  ZUG_FWD(is)...),
+                                             std::move(next));
+                });
+        };
+    }
+} dedupe{};
 
 } // namespace zug

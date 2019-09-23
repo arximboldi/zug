@@ -12,13 +12,15 @@
 
 namespace zug {
 
-auto filter = [](auto&& predicate) {
+template <typename PredicateT>
+auto filter(PredicateT&& predicate)
+{
     return [=](auto&& step) {
         return [=, p = predicate](auto&& s, auto&&... is) mutable {
             return invoke(p, is...) ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)
                                     : skip(step, ZUG_FWD(s), ZUG_FWD(is)...);
         };
     };
-};
-
 }
+
+} // namespace zug

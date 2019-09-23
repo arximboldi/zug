@@ -13,7 +13,9 @@
 
 namespace zug {
 
-auto enumerate_from = [](auto&& initial) {
+template <typename T>
+constexpr auto enumerate_from(T&& initial)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), constantly(initial));
@@ -23,8 +25,8 @@ auto enumerate_from = [](auto&& initial) {
                 std::move(count) + static_cast<decltype(initial)>(1));
         };
     };
-};
+}
 
-auto enumerate = enumerate_from(std::size_t{});
+ZUG_INLINE_CONSTEXPR auto enumerate = enumerate_from(std::size_t{});
 
 } // namespace zug

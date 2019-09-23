@@ -17,7 +17,9 @@ namespace zug {
 /*!
  * Similar to clojure.core/drop-while$1
  */
-constexpr auto drop_while = [](auto&& predicate) {
+template <typename PredicateT>
+constexpr auto drop_while(PredicateT&& predicate)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto taking = state_data(ZUG_FWD(s), [] { return false; }) ||
@@ -29,6 +31,6 @@ constexpr auto drop_while = [](auto&& predicate) {
                 taking);
         };
     };
-};
+}
 
 } // namespace zug

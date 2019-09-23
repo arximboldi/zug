@@ -19,8 +19,13 @@ namespace zug {
  *
  * @see tuplify
  */
-constexpr auto last = [](auto&&, auto&&... ins) -> decltype(auto) {
-    return tuplify(ZUG_FWD(ins)...);
-};
+ZUG_INLINE_CONSTEXPR struct last_t
+{
+    template <typename StateT, typename... InputTs>
+    decltype(auto) operator()(StateT&&, InputTs&&... ins) const
+    {
+        return tuplify(ZUG_FWD(ins)...);
+    }
+} last{};
 
 } // namespace zug

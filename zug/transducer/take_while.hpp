@@ -13,7 +13,9 @@
 
 namespace zug {
 
-constexpr auto take_while = [](auto predicate) {
+template <typename PredicateT>
+constexpr auto take_while(PredicateT predicate)
+{
     return [=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return invoke(predicate, is...)
@@ -23,6 +25,6 @@ constexpr auto take_while = [](auto predicate) {
                              step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...));
         };
     };
-};
+}
 
 } // namespace zug

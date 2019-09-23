@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/compat/invoke.hpp>
+#include <zug/detail/inline_constexpr.hpp>
 
 #define ZUG_FWD(x) std::forward<decltype(x)>(x)
 
@@ -17,18 +18,37 @@ namespace zug {
 /*!
  * Does nothing.
  */
-constexpr auto noop = [](auto&&...) {};
+ZUG_INLINE_CONSTEXPR struct noop_t
+{
+    template <typename... T>
+    void operator()(T&&...) const
+    {}
+} noop{};
 
 /*!
  * Similar to clojure.core/identity
  */
-constexpr auto identity = [](auto&& x) -> decltype(auto) { return ZUG_FWD(x); };
+ZUG_INLINE_CONSTEXPR struct identity_t
+{
+    template <typename T>
+    decltype(auto) operator()(T&& x) const
+    {
+        return ZUG_FWD(x);
+    };
+} identity{};
 
 /*!
  * Similar to @a identity, but it never returns a reference
  * to the pased in value.
  */
-constexpr auto identity_ = [](auto&& x) { return ZUG_FWD(x); };
+ZUG_INLINE_CONSTEXPR struct identity__t
+{
+    template <typename T>
+    auto operator()(T&& x) const
+    {
+        return ZUG_FWD(x);
+    };
+} identity_{};
 
 namespace detail {
 
@@ -113,11 +133,13 @@ struct constantly_t
     {
         return value;
     }
+
     template <typename... ArgTs>
     auto operator()(ArgTs&&...) const& -> const T&
     {
         return value;
     }
+
     template <typename... ArgTs>
     auto operator()(ArgTs&&...) && -> T&&
     {

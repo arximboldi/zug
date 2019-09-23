@@ -14,9 +14,14 @@ namespace zug {
  * Reducing function that emplaces back at the collection that is
  * uses as state.
  */
-constexpr auto emplacing_back = [](auto&& st, auto&&... ins) -> decltype(auto) {
-    st.emplace_back(ZUG_FWD(ins)...);
-    return ZUG_FWD(st);
-};
+ZUG_INLINE_CONSTEXPR struct emplacing_back_t
+{
+    template <typename StateT, typename... InputTs>
+    decltype(auto) operator()(StateT&& st, InputTs&&... ins) const
+    {
+        st.emplace_back(ZUG_FWD(ins)...);
+        return ZUG_FWD(st);
+    }
+} emplacing_back{};
 
 } // namespace zug

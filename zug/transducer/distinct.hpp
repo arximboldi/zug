@@ -17,28 +17,33 @@
 
 namespace zug {
 
-constexpr auto distinct = [](auto&& step) {
-    return [=](auto&& s, auto&&... is) mutable {
-        using cache_t =
-            std::unordered_set<std::tuple<std::decay_t<decltype(is)>...>,
-                               detail::tuple_hash>;
+ZUG_INLINE_CONSTEXPR struct distinct_t
+{
+    template <typename StepT>
+    auto operator()(StepT&& step) const
+    {
+        return [=](auto&& s, auto&&... is) mutable {
+            using cache_t =
+                std::unordered_set<std::tuple<std::decay_t<decltype(is)>...>,
+                                   detail::tuple_hash>;
 
-        return with_state(
-            ZUG_FWD(s),
-            [&](auto&& st) {
-                return wrap_state(
-                    step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...),
-                    cache_t{{std::make_tuple(is...)}});
-            },
-            [&](auto&& st) {
-                auto& cache = state_wrapper_data(st);
-                auto unique = cache.emplace(is...).second;
-                return !unique ? st
-                               : wrap_state(step(state_unwrap(ZUG_FWD(st)),
-                                                 ZUG_FWD(is)...),
-                                            std::move(cache));
-            });
-    };
-};
+            return with_state(
+                ZUG_FWD(s),
+                [&](auto&& st) {
+                    return wrap_state(
+                        step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...),
+                        cache_t{{std::make_tuple(is...)}});
+                },
+                [&](auto&& st) {
+                    auto& cache = state_wrapper_data(st);
+                    auto unique = cache.emplace(is...).second;
+                    return !unique ? st
+                                   : wrap_state(step(state_unwrap(ZUG_FWD(st)),
+                                                     ZUG_FWD(is)...),
+                                                std::move(cache));
+                });
+        };
+    }
+} distinct{};
 
 } // namespace zug

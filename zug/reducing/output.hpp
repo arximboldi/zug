@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/detail/inline_constexpr.hpp>
 #include <zug/tuplify.hpp>
 
 #include <utility>
@@ -18,7 +19,7 @@ namespace zug {
  * Reducing function that outputs through the iterator that is carried
  * as state.
  */
-constexpr struct output_t
+ZUG_INLINE_CONSTEXPR struct output_t
 {
     template <typename It, typename... Inputs>
     It operator()(It it, Inputs&&... ins) const
