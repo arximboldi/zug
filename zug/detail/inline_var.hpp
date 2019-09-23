@@ -8,23 +8,14 @@
 
 #pragma once
 
-namespace zug {
-namespace detail {
-
-template <typename T>
-struct inline_variable_holder
-{
-    static constexpr T value {};
-};
-
-template <typename T>
-constexpr T inline_variable_holder<T>::value;
-
-template <typename T>
-constexpr const T& make_inline_var()
-{
-    return inline_variable_holder<T>::value;
-}
-
-} // namespace detail
-} // namespace zug
+#if defined(__cpp_inline_variables)
+#define DETAIL_ZUG_INLINE_CONSTEXPR inline constexpr
+#else // defined(__cpp_inline_variables)
+#if defined(_MSC_VER)
+#define DETAIL_ZUG_INLINE_CONSTEXPR extern constexpr __declspec(selectany)
+#elif defined(__GNUC__) // defined(_MSC_VER)
+#define DETAIL_ZUG_INLINE_CONSTEXPR extern constexpr __attribute__((weak))
+#else // defined(_MSC_VER)
+#define DETAIL_ZUG_INLINE_CONSTEXPR constexpr /* not inline */
+#endif // defined(_MSC_VER)
+#endif // defined(__cpp_inline_variables)
