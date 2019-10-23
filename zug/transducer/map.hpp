@@ -8,9 +8,30 @@
 
 #pragma once
 
+#include <zug/detail/transducer_holder.hpp>
 #include <zug/util.hpp>
 
+#include <utility>
+
 namespace zug {
+
+namespace detail {
+
+template <typename MappingT>
+struct map
+{
+    MappingT mapping;
+
+    template <typename Step>
+    auto operator()(Step&& step) const
+    {
+        return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
+            return step(ZUG_FWD(s), compat::invoke(mapping, ZUG_FWD(is)...));
+        };
+    };
+};
+
+} // namespace detail
 
 /*!
  * Similar to clojure.core/map$1
@@ -18,11 +39,8 @@ namespace zug {
 template <typename MappingT>
 constexpr auto map(MappingT&& mapping)
 {
-    return [=](auto step) {
-        return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
-            return step(ZUG_FWD(s), compat::invoke(mapping, ZUG_FWD(is)...));
-        };
-    };
+    return detail::make_transducer_holder(
+        detail::map<std::decay_t<MappingT>>{std::forward<MappingT>(mapping)});
 }
 
 } // namespace zug

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/detail/copy_traits.hpp>
+#include <zug/detail/transducer_holder.hpp>
 #include <zug/detail/tuple_utils.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
@@ -17,7 +18,7 @@
 
 namespace zug {
 
-ZUG_INLINE_CONSTEXPR struct distinct_t
+struct distinct_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -44,6 +45,8 @@ ZUG_INLINE_CONSTEXPR struct distinct_t
                 });
         };
     }
-} distinct{};
+};
+
+ZUG_INLINE_CONSTEXPR auto distinct = detail::make_transducer_holder(distinct_t{});
 
 } // namespace zug

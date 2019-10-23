@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/detail/transducer_holder.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
 
@@ -19,7 +20,7 @@ namespace zug {
 template <typename IntegralT>
 auto take_nth(IntegralT nth)
 {
-    return [=](auto step) {
+    return detail::make_transducer_holder([=](auto step) {
         return [=](auto&& s, auto&&... is) mutable {
             return with_state(
                 ZUG_FWD(s),
@@ -36,7 +37,7 @@ auto take_nth(IntegralT nth)
                                             1);
                 });
         };
-    };
+    });
 };
 
 } // namespace zug

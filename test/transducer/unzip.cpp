@@ -13,7 +13,9 @@
 #include <zug/transducer/map.hpp>
 #include <zug/transducer/unzip.hpp>
 
+#include <array>
 #include <iostream>
+#include <vector>
 
 using namespace zug;
 

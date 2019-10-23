@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/detail/lambda_wrapper.hpp>
+#include <zug/detail/transducer_holder.hpp>
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
@@ -28,7 +29,7 @@ using partition_container_t =
 template <typename SizeT>
 auto partition(SizeT size)
 {
-    return [=](auto&& step) {
+    return detail::make_transducer_holder([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto data         = state_data(ZUG_FWD(s), [&] {
                 auto v = partition_container_t<decltype(is)...>{};
@@ -53,7 +54,7 @@ auto partition(SizeT size)
                 std::move(next_state),
                 std::make_tuple(std::move(next_vector), std::move(next_step)));
         };
-    };
+    });
 };
 
 template <typename T>
