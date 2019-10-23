@@ -27,7 +27,7 @@
 #pragma once
 
 #include <zug/compat/invoke.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/util.hpp>
 
 namespace zug {
@@ -45,7 +45,7 @@ namespace zug {
 template <typename ActionT>
 auto sink(ActionT&& action)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             compat::invoke(action, ZUG_FWD(is)...);
             return step(ZUG_FWD(s));

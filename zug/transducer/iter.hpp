@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
 
@@ -24,7 +24,7 @@ struct iter_tag
 template <typename InputRangeT>
 auto iter(InputRangeT&& range)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::cbegin;
             using std::cend;

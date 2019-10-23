@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/util.hpp>
 
@@ -28,6 +28,6 @@ struct cat_t
     }
 };
 
-ZUG_INLINE_CONSTEXPR auto cat = detail::make_transducer_holder(cat_t{});
+ZUG_INLINE_CONSTEXPR auto cat = make_pipeable(cat_t{});
 
 } // namespace zug

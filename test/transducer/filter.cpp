@@ -152,3 +152,35 @@ TEST_CASE("filter, type erasure triple mortal back flip")
         CHECK(res == (decltype(res){8, 16}));
     }
 }
+
+TEST_CASE("filter, type erasure triple mortal back flip with pipe special finishing move")
+{
+    auto even    = [](int x) { return x % 2 == 0; };
+    auto gt3     = [](int x) { return x > 3; };
+    auto lt8     = [](int x) { return x < 8; };
+    auto plus1   = [](int x) { return x + 1; };
+    auto times2  = [](int x) { return x * 2; };
+    auto longer3 = [](std::vector<int> x) { return x.size() > 3u; };
+    auto fstlt10 = [](std::vector<int> x) { return !x.empty() && x[0] < 10; };
+
+    auto v     = std::vector<int>{{1, 2, 3, 4, 5, 6, 7, 8, 9}};
+    auto xform = transducer<int>{
+        ((take_while(lt8) | partition(3u) | take(10) | mapcat(plus1) |
+          filter(even)) |
+         (transducer<int>{map(times2)} | filter(gt3))) |
+        partition(6u) |
+        (transducer<std::vector<int>, int>{
+            transducer<std::vector<int>>{filter(longer3)} |
+            take_while(fstlt10) | cat | transducer<int>{take(2)}}) |
+        filter(gt3) | (take(5) | transducer<int>{map(times2)} | filter(even))};
+
+    {
+        auto res = transduce(xform, std::plus<int>{}, 1, v);
+        CHECK(res == 25);
+    }
+
+    {
+        auto res = into_vector(xform, v);
+        CHECK(res == (decltype(res){8, 16}));
+    }
+}

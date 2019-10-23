@@ -7,7 +7,6 @@
 #include <utility>
 
 namespace zug {
-namespace detail {
 
 template <typename Transducer>
 struct pipeable
@@ -55,9 +54,8 @@ constexpr auto operator|(pipeable<T1> lhs, pipeable<T2> rhs)
 template <typename Transducer>
 constexpr auto make_pipeable(Transducer&& f)
 {
-    return transducer_holder<std::decay_t<Transducer>>{
+    return pipeable<std::decay_t<Transducer>>{
         std::forward<Transducer>(f)};
 }
 
-} // namespace detail
 } // namespace zug

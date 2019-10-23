@@ -8,16 +8,14 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
 
 namespace zug {
 
-namespace detail {
-
 template <typename T>
-struct enumerate
+struct enumerate_t
 {
     T initial;
 
@@ -34,13 +32,11 @@ struct enumerate
     }
 };
 
-} // namespace detail
-
 template <typename T>
 constexpr auto enumerate_from(T&& initial)
 {
-    return detail::make_transducer_holder(
-        detail::enumerate<std::decay_t<T>>{std::forward<T>(initial)});
+    return make_pipeable(
+        enumerate_t<std::decay_t<T>>{std::forward<T>(initial)});
 }
 
 ZUG_INLINE_CONSTEXPR auto enumerate = enumerate_from(std::size_t{});

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/maybe_reduced.hpp>
 #include <zug/skip.hpp>
 
@@ -17,7 +17,7 @@ namespace zug {
 template <typename PredicateT>
 constexpr auto take_while(PredicateT predicate)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return compat::invoke(predicate, is...)
                        ? not_reduced(call(

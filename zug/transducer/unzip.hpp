@@ -7,7 +7,7 @@
 //
 
 #include <zug/compat/apply.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 
 namespace zug {
 
@@ -75,6 +75,6 @@ struct unzip_t
     }
 };
 
-ZUG_INLINE_CONSTEXPR auto unzip = detail::make_transducer_holder(unzip_t{});
+ZUG_INLINE_CONSTEXPR auto unzip = make_pipeable(unzip_t{});
 
 } // namespace zug

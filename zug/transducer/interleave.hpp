@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/iterator_range.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/state_wrapper.hpp>
 
@@ -50,6 +50,6 @@ struct interleave_t
     }
 };
 
-ZUG_INLINE_CONSTEXPR auto interleave = detail::make_transducer_holder(interleave_t{});
+ZUG_INLINE_CONSTEXPR auto interleave = make_pipeable(interleave_t{});
 
 } // namespace zug

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/util.hpp>
 
 #include <utility>
@@ -39,7 +39,7 @@ struct map
 template <typename MappingT>
 constexpr auto map(MappingT&& mapping)
 {
-    return detail::make_transducer_holder(
+    return make_pipeable(
         detail::map<std::decay_t<MappingT>>{std::forward<MappingT>(mapping)});
 }
 

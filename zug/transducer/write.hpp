@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/copy_traits.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
 
@@ -61,7 +61,7 @@ void write_inputs(OutputStreamT& stream,
 template <typename OutputStreamT, typename InSeparatorT, typename ArgSeparatorT>
 auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)
 {
-    return detail::make_transducer_holder([=, stream_ref = std::ref(stream)](auto&& step) {
+    return make_pipeable([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::begin;
             using std::end;

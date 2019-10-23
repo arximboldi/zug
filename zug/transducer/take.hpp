@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/empty_transducer_error.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
 
@@ -27,7 +27,7 @@ bool state_wrapper_data_is_reduced(take_tag, T&& n)
 template <typename IntegralT>
 constexpr auto take(IntegralT n)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return wrap_state<take_tag>(
                 step(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),

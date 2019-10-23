@@ -36,6 +36,7 @@ target_include_directories(zug INTERFACE
   $<BUILD_INTERFACE:${zug_BINARY_DIR}/>
   $<BUILD_INTERFACE:${zug_SOURCE_DIR}/>
   $<INSTALL_INTERFACE:include>)
+target_include_directories(zug INTERFACE /usr/local/Cellar/boost/1.67.0_1/include)
 
 install(TARGETS zug EXPORT ZugConfig)
 install(EXPORT ZugConfig DESTINATION lib/cmake/Zug)

@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/iterator_range.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/maybe_reduced.hpp>
 
 #include <array>
@@ -23,7 +23,7 @@ namespace detail {
 template <typename InputStreamT, typename MkBuf>
 auto readbuf(InputStreamT& stream, MkBuf make_buffer)
 {
-    return detail::make_transducer_holder([=, stream_ref = std::ref(stream)](auto&& step) {
+    return make_pipeable([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=, buffer = make_buffer()](auto&& s, auto&&... is) mutable {
             auto& stream = stream_ref.get();
             auto data    = &buffer[0];

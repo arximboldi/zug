@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 
 namespace zug {
@@ -22,7 +23,7 @@ namespace zug {
 template <typename InitT = std::size_t, typename DeltaT = InitT>
 constexpr auto count(InitT init = InitT{0}, DeltaT delta = DeltaT{1})
 {
-    return [=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [=] { return init; });
             auto next  = count;
@@ -32,7 +33,7 @@ constexpr auto count(InitT init = InitT{0}, DeltaT delta = DeltaT{1})
                                    std::move(count)),
                               std::move(next));
         };
-    };
+    });
 }
 
 } // namespace zug

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/detail/pipeable.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
 
@@ -19,7 +20,7 @@ namespace zug {
 template <typename IntegralT>
 constexpr auto drop(IntegralT n)
 {
-    return [=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [&] { return n; });
             return count != 0 ? wrap_state(skip(step,
@@ -31,7 +32,7 @@ constexpr auto drop(IntegralT n)
                                                 ZUG_FWD(is)...),
                                            count);
         };
-    };
+    });
 }
 
 } // namespace zug

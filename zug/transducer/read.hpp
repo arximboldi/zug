@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/maybe_reduced.hpp>
 #include <zug/skip.hpp>
 
@@ -23,7 +23,7 @@ namespace zug {
 template <typename ValueT, typename InputStreamT>
 auto read(InputStreamT& stream)
 {
-    return detail::make_transducer_holder([=, stream_ref = std::ref(stream)](auto&& step) {
+    return make_pipeable([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             ValueT value{};
             auto& stream = stream_ref.get();

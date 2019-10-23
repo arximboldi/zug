@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/skip.hpp>
 
 namespace zug {
@@ -16,7 +16,7 @@ namespace zug {
 template <typename PredicateT>
 auto filter(PredicateT&& predicate)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=, p = predicate](auto&& s, auto&&... is) mutable {
             return compat::invoke(p, is...)
                        ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)

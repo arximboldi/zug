@@ -6,7 +6,7 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 
 #include <functional>
 #include <ios>
@@ -22,7 +22,7 @@ namespace zug {
 template <typename OutputStreamT>
 auto writebuf(OutputStreamT& stream)
 {
-    return detail::make_transducer_holder([=, stream_ref = std::ref(stream)](auto&& step) {
+    return make_pipeable([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&& buf, auto&&... is) mutable {
             using std::begin;
             using std::end;

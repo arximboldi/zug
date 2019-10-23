@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/empty_transducer_error.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/reduce_nested.hpp>
 
 namespace zug {
@@ -47,7 +47,7 @@ template <typename InputRangeT>
 constexpr auto product(InputRangeT&& r)
 {
     detail::check_non_empty(r);
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable -> decltype(auto) {
             return detail::reduce_nested_non_empty_product(
                 step, ZUG_FWD(s), r, ZUG_FWD(is)...);
@@ -61,7 +61,7 @@ template <typename InputRangeT1,
 constexpr auto
 product(InputRangeT1&& r1, InputRangeT2&& r2, InputRangeTs&&... rs)
 {
-    return detail::make_transducer_holder(
+    return make_pipeable(
         comp(product(std::forward<InputRangeT1>(r1)),
              product(std::forward<InputRangeT2>(r2)),
              product(std::forward<InputRangeTs>(rs))...));

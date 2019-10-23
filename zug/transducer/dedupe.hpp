@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/copy_traits.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
 
@@ -41,6 +41,6 @@ struct dedupe_t
     }
 };
 
-ZUG_INLINE_CONSTEXPR auto dedupe = detail::make_transducer_holder(dedupe_t{});
+ZUG_INLINE_CONSTEXPR auto dedupe = make_pipeable(dedupe_t{});
 
 } // namespace zug

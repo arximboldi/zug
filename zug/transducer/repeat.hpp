@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/transducer/take.hpp>
 
 namespace zug {
@@ -20,7 +20,7 @@ namespace zug {
 template <typename ValueT>
 constexpr auto repeat(ValueT&& value)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return step(ZUG_FWD(s), ZUG_FWD(is)..., value);
         };

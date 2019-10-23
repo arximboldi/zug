@@ -9,7 +9,7 @@
 #pragma once
 
 #include <zug/detail/copy_traits.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/detail/tuple_utils.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
@@ -47,6 +47,6 @@ struct distinct_t
     }
 };
 
-ZUG_INLINE_CONSTEXPR auto distinct = detail::make_transducer_holder(distinct_t{});
+ZUG_INLINE_CONSTEXPR auto distinct = make_pipeable(distinct_t{});
 
 } // namespace zug

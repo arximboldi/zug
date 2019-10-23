@@ -11,7 +11,7 @@
 #include <zug/compat/apply.hpp>
 #include <zug/detail/copy_traits.hpp>
 #include <zug/detail/empty_transducer_error.hpp>
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/with_state.hpp>
 
@@ -35,7 +35,7 @@ auto interpose(ValueTs&&... xs)
     // It seems GCC does not like capturing xs directly, causing it to
     // uninitialized usage problems, so we make a tuple out of it..
     return
-        detail::make_transducer_holder([value = std::make_tuple(std::forward<ValueTs>(xs)...)](auto&& step) {
+        make_pipeable([value = std::make_tuple(std::forward<ValueTs>(xs)...)](auto&& step) {
             return [=](auto&& s, auto&&... is) mutable {
                 return with_state(
                     ZUG_FWD(s),

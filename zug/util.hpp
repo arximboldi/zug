@@ -10,6 +10,9 @@
 
 #include <zug/compat/invoke.hpp>
 #include <zug/detail/inline_constexpr.hpp>
+#include <zug/detail/pipeable.hpp>
+
+#include <utility>
 
 #define ZUG_FWD(x) std::forward<decltype(x)>(x)
 
@@ -94,6 +97,21 @@ struct get_composed<F, Fs...>
     using type = composed<F, get_composed_t<Fs...>>;
 };
 
+template <typename F>
+auto do_comp(F&& f) -> F&&
+{
+    return std::forward<F>(f);
+}
+
+template <typename Fn, typename... Fns>
+auto do_comp(Fn&& f, Fns&&... fns)
+    -> detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>
+{
+    using result_t =
+        detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>;
+    return result_t{std::forward<Fn>(f), do_comp(std::forward<Fns>(fns)...)};
+}
+
 } // namespace detail
 
 /*!
@@ -106,19 +124,11 @@ struct get_composed<F, Fs...>
  * Functions are invoked via standard *INVOKE*, allowing to compose
  * function pointers, member functions, etc.
  */
-template <typename F>
-auto comp(F&& f) -> F&&
-{
-    return std::forward<F>(f);
-}
-
 template <typename Fn, typename... Fns>
 auto comp(Fn&& f, Fns&&... fns)
-    -> detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>
 {
-    using result_t =
-        detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>;
-    return result_t{std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
+    return make_pipeable(
+        detail::do_comp(std::forward<Fn>(f), std ::forward<Fns>(fns)...));
 }
 
 /*!

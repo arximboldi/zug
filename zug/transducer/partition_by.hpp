@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <zug/detail/transducer_holder.hpp>
+#include <zug/detail/pipeable.hpp>
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
@@ -26,7 +26,7 @@ struct partition_by_tag
 template <typename MappingT>
 auto partition_by(MappingT&& mapping)
 {
-    return detail::make_transducer_holder([=](auto&& step) {
+    return make_pipeable([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;
