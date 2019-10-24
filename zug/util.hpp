@@ -11,6 +11,10 @@
 #include <zug/compat/invoke.hpp>
 #include <zug/detail/inline_constexpr.hpp>
 
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
 #define ZUG_FWD(x) std::forward<decltype(x)>(x)
 
 namespace zug {
@@ -52,46 +56,61 @@ ZUG_INLINE_CONSTEXPR struct identity__t
 
 namespace detail {
 
-template <class F, class G>
+template <std::size_t Index, std::size_t Last>
+struct invoke_composition_impl
+{
+    template <typename Fns, typename... Args>
+    static constexpr decltype(auto) apply(Fns&& fns, Args&&... args)
+    {
+        return compat::invoke(
+            std::get<Index>(std::forward<Fns>(fns)),
+            invoke_composition_impl<Index + 1, Last>::apply(
+                std::forward<Fns>(fns), std::forward<Args>(args)...));
+    }
+};
+
+template <std::size_t Last>
+struct invoke_composition_impl<Last, Last>
+{
+    template <typename Fns, typename... Args>
+    static constexpr decltype(auto) apply(Fns&& fns, Args&&... args)
+    {
+        return compat::invoke(std::get<Last>(std::forward<Fns>(fns)),
+                              std::forward<Args>(args)...);
+    }
+};
+
+template <typename Fns, typename... Args>
+constexpr decltype(auto) invoke_composition(Fns&& fns, Args&&... args)
+{
+    return invoke_composition_impl<0,
+                                   std::tuple_size<std::decay_t<Fns>>::value -
+                                       1>::apply(std::forward<Fns>(fns),
+                                                 std::forward<Args>(args)...);
+}
+
+template <typename Fn, typename... Fns>
 struct composed
 {
-    F f;
-    G g;
+    std::tuple<Fn, Fns...> fns;
 
-    template <class... T>
-    decltype(auto) operator()(T&&... xs) &
+    template <typename... T>
+    constexpr decltype(auto) operator()(T&&... xs) &
     {
-        return compat::invoke(f, compat::invoke(g, std::forward<T>(xs)...));
+        return invoke_composition(fns, std::forward<T>(xs)...);
     }
-    template <class... T>
-    decltype(auto) operator()(T&&... xs) const&
+
+    template <typename... T>
+    constexpr decltype(auto) operator()(T&&... xs) const&
     {
-        return compat::invoke(f, compat::invoke(g, std::forward<T>(xs)...));
+        return invoke_composition(fns, std::forward<T>(xs)...);
     }
-    template <class... T>
-    decltype(auto) operator()(T&&... xs) &&
+
+    template <typename... T>
+    constexpr decltype(auto) operator()(T&&... xs) &&
     {
-        return compat::invoke(std::move(f),
-                              compat::invoke(g, std::forward<T>(xs)...));
+        return invoke_composition(std::move(fns), std::forward<T>(xs)...);
     }
-};
-
-template <typename... Fns>
-struct get_composed;
-
-template <typename... Ts>
-using get_composed_t = typename get_composed<Ts...>::type;
-
-template <typename F>
-struct get_composed<F>
-{
-    using type = F;
-};
-
-template <typename F, typename... Fs>
-struct get_composed<F, Fs...>
-{
-    using type = composed<F, get_composed_t<Fs...>>;
 };
 
 } // namespace detail
@@ -114,11 +133,9 @@ auto comp(F&& f) -> F&&
 
 template <typename Fn, typename... Fns>
 auto comp(Fn&& f, Fns&&... fns)
-    -> detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>
+    -> detail::composed<std::decay_t<Fn>, std::decay_t<Fns>...>
 {
-    using result_t =
-        detail::get_composed_t<std::decay_t<Fn>, std::decay_t<Fns>...>;
-    return result_t{std::forward<Fn>(f), comp(std::forward<Fns>(fns)...)};
+    return {std::make_tuple(std::forward<Fn>(f), std::forward<Fns>(fns)...)};
 }
 
 /*!
