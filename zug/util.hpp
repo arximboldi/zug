@@ -56,26 +56,26 @@ ZUG_INLINE_CONSTEXPR struct identity__t
 
 namespace detail {
 
-template <std::size_t Index, std::size_t Last>
+template <std::size_t Index>
 struct invoke_composition_impl
 {
     template <typename Fns, typename... Args>
     static constexpr decltype(auto) apply(Fns&& fns, Args&&... args)
     {
-        return compat::invoke(
-            std::get<Index>(std::forward<Fns>(fns)),
-            invoke_composition_impl<Index + 1, Last>::apply(
-                std::forward<Fns>(fns), std::forward<Args>(args)...));
+        return invoke_composition_impl<Index - 1>::apply(
+            std::forward<Fns>(fns),
+            compat::invoke(std::get<Index>(std::forward<Fns>(fns)),
+                           std::forward<Args>(args)...));
     }
 };
 
-template <std::size_t Last>
-struct invoke_composition_impl<Last, Last>
+template <>
+struct invoke_composition_impl<0>
 {
     template <typename Fns, typename... Args>
     static constexpr decltype(auto) apply(Fns&& fns, Args&&... args)
     {
-        return compat::invoke(std::get<Last>(std::forward<Fns>(fns)),
+        return compat::invoke(std::get<0>(std::forward<Fns>(fns)),
                               std::forward<Args>(args)...);
     }
 };
@@ -83,10 +83,9 @@ struct invoke_composition_impl<Last, Last>
 template <typename Fns, typename... Args>
 constexpr decltype(auto) invoke_composition(Fns&& fns, Args&&... args)
 {
-    return invoke_composition_impl<0,
-                                   std::tuple_size<std::decay_t<Fns>>::value -
-                                       1>::apply(std::forward<Fns>(fns),
-                                                 std::forward<Args>(args)...);
+    constexpr auto Size = std::tuple_size<std::decay_t<Fns>>::value;
+    return invoke_composition_impl<Size - 1>::apply(
+        std::forward<Fns>(fns), std::forward<Args>(args)...);
 }
 
 template <typename Fn, typename... Fns>
