@@ -11,6 +11,11 @@
 #include <zug/compat/invoke.hpp>
 #include <zug/meta/util.hpp>
 
+#include <array>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
 namespace zug {
 namespace compat {
 

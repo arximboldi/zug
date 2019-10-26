@@ -13,6 +13,7 @@
 #include <zug/transducer/map.hpp>
 #include <zug/transducer/unzip.hpp>
 
+#include <array>
 #include <iostream>
 
 using namespace zug;
