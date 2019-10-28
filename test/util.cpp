@@ -68,12 +68,38 @@ TEST_CASE("comp: supports single function with multiple args")
 
 TEST_CASE("comp: comp a comp")
 {
+    static_assert(std::is_same<decltype(comp(comp(add_one, add_one), divide)),
+                               detail::composed<decltype(add_one),
+                                                decltype(add_one),
+                                                decltype(divide)>>::value,
+                  "comping a comp produces a flattened composed");
+
     auto result = comp(comp(add_one, add_one), divide)(12, 4);
     CHECK(result == 5);
 }
 
 TEST_CASE("comp: comp two comps")
 {
+    static_assert(
+        std::is_same<
+            decltype(comp(comp(add_one), comp(add_one))),
+            detail::composed<decltype(add_one), decltype(add_one)>>::value,
+        "comping two comps produces a flattened composed");
+
     auto result = comp(comp(add_one), comp(add_one))(10);
+    CHECK(result == 12);
+}
+
+TEST_CASE("comp: comp an lvalue comp")
+{
+    auto comped = comp(add_one);
+    auto result = comp(comped, comp(add_one))(10);
+    CHECK(result == 12);
+}
+
+TEST_CASE("comp: comp a const lvalue comp")
+{
+    const auto comped = comp(add_one);
+    auto result = comp(comped, comped)(10);
     CHECK(result == 12);
 }
