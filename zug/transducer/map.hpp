@@ -12,17 +12,27 @@
 
 namespace zug {
 
+template <typename MappingT>
+struct map_t
+{
+    template <typename Step>
+    constexpr auto operator()(Step&& step) const
+    {
+        return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
+            return step(ZUG_FWD(s), compat::invoke(mapping, ZUG_FWD(is)...));
+        };
+    }
+
+    MappingT mapping;
+};
+
 /*!
  * Similar to clojure.core/map$1
  */
 template <typename MappingT>
 constexpr auto map(MappingT&& mapping)
 {
-    return [=](auto step) {
-        return [=, mapping = mapping](auto&& s, auto&&... is) mutable {
-            return step(ZUG_FWD(s), compat::invoke(mapping, ZUG_FWD(is)...));
-        };
-    };
+    return comp(map_t<std::decay_t<MappingT>>{std::forward<MappingT>(mapping)});
 }
 
 } // namespace zug

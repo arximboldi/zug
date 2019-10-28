@@ -16,7 +16,7 @@ namespace zug {
 /*!
  * Similar to clojure.core/cat$1
  */
-ZUG_INLINE_CONSTEXPR struct cat_t
+struct cat_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -25,6 +25,8 @@ ZUG_INLINE_CONSTEXPR struct cat_t
             return reduce_nested(step, ZUG_FWD(s), ZUG_FWD(is)...);
         };
     }
-} cat{};
+};
+
+ZUG_INLINE_CONSTEXPR auto cat = comp(cat_t{});
 
 } // namespace zug

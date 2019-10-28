@@ -6,6 +6,8 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
+#include <zug/util.hpp>
+
 #include <functional>
 #include <ios>
 #include <iterator>
@@ -20,7 +22,7 @@ namespace zug {
 template <typename OutputStreamT>
 auto writebuf(OutputStreamT& stream)
 {
-    return [=, stream_ref = std::ref(stream)](auto&& step) {
+    return comp([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&& buf, auto&&... is) mutable {
             using std::begin;
             using std::end;
@@ -33,7 +35,7 @@ auto writebuf(OutputStreamT& stream)
                 static_cast<std::streamsize>(std::distance(first, last)));
             return step(ZUG_FWD(s), ZUG_FWD(buf), ZUG_FWD(is)...);
         };
-    };
+    });
 }
 
 } // namespace zug

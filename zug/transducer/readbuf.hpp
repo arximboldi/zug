@@ -10,6 +10,7 @@
 
 #include <zug/detail/iterator_range.hpp>
 #include <zug/maybe_reduced.hpp>
+#include <zug/util.hpp>
 
 #include <array>
 #include <functional>
@@ -22,7 +23,7 @@ namespace detail {
 template <typename InputStreamT, typename MkBuf>
 auto readbuf(InputStreamT& stream, MkBuf make_buffer)
 {
-    return [=, stream_ref = std::ref(stream)](auto&& step) {
+    return comp([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=, buffer = make_buffer()](auto&& s, auto&&... is) mutable {
             auto& stream = stream_ref.get();
             auto data    = &buffer[0];
@@ -33,7 +34,7 @@ auto readbuf(InputStreamT& stream, MkBuf make_buffer)
                      detail::make_iterator_range(data, data + stream.gcount())),
                 !stream);
         };
-    };
+    });
 }
 
 } // namespace detail

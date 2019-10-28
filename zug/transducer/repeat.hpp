@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/transducer/take.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -19,11 +20,11 @@ namespace zug {
 template <typename ValueT>
 constexpr auto repeat(ValueT&& value)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return step(ZUG_FWD(s), ZUG_FWD(is)..., value);
         };
-    };
+    });
 }
 
 template <typename ValueT, typename... ValueTs>
@@ -40,8 +41,8 @@ constexpr auto repeat(ValueT&& r, ValueTs&&... rs)
 template <typename IntegralT, typename... ValueTs>
 constexpr auto repeatn(IntegralT&& n, ValueTs&&... rs)
 {
-    return comp(repeat(std::forward<ValueTs>(rs)...),
-                take(std::forward<IntegralT>(n)));
+    return repeat(std::forward<ValueTs>(rs)...) |
+           take(std::forward<IntegralT>(n));
 }
 
 } // namespace zug

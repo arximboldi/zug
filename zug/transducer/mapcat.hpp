@@ -20,7 +20,7 @@ namespace zug {
 template <typename MappingT>
 auto mapcat(MappingT&& mapping)
 {
-    return comp(cat, map(std::forward<MappingT>(mapping)));
+    return cat | map(std::forward<MappingT>(mapping));
 }
 
 } // namespace zug

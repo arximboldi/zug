@@ -1,6 +1,6 @@
 //
 // zug: transducers for C++
-// Copyright (C) 2019 Juan Pedro Bolivar Puente
+// Copyright (C) 2019 Juan Pedro Bolivar Puente and Carl Bussey
 //
 // This software is distributed under the Boost Software License, Version 1.0.
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
@@ -16,45 +16,7 @@
 #include <type_traits>
 #include <utility>
 
-#define ZUG_FWD(x) std::forward<decltype(x)>(x)
-
 namespace zug {
-
-/*!
- * Does nothing.
- */
-ZUG_INLINE_CONSTEXPR struct noop_t
-{
-    template <typename... T>
-    void operator()(T&&...) const
-    {}
-} noop{};
-
-/*!
- * Similar to clojure.core/identity
- */
-ZUG_INLINE_CONSTEXPR struct identity_t
-{
-    template <typename T>
-    decltype(auto) operator()(T&& x) const
-    {
-        return ZUG_FWD(x);
-    };
-} identity{};
-
-/*!
- * Similar to @a identity, but it never returns a reference
- * to the pased in value.
- */
-ZUG_INLINE_CONSTEXPR struct identity__t
-{
-    template <typename T>
-    auto operator()(T&& x) const
-    {
-        return ZUG_FWD(x);
-    };
-} identity_{};
-
 namespace detail {
 
 template <std::size_t Index>
@@ -89,6 +51,8 @@ constexpr decltype(auto) invoke_composition(Fns&& fns, Args&&... args)
         std::forward<Fns>(fns), std::forward<Args>(args)...);
 }
 
+} // namespace detail
+
 template <typename Fn, typename... Fns>
 struct composed : std::tuple<Fn, Fns...>
 {
@@ -105,20 +69,20 @@ struct composed : std::tuple<Fn, Fns...>
     template <typename... T>
     constexpr decltype(auto) operator()(T&&... xs) &
     {
-        return invoke_composition(as_tuple(), std::forward<T>(xs)...);
+        return detail::invoke_composition(as_tuple(), std::forward<T>(xs)...);
     }
 
     template <typename... T>
     constexpr decltype(auto) operator()(T&&... xs) const&
     {
-        return invoke_composition(as_tuple(), std::forward<T>(xs)...);
+        return detail::invoke_composition(as_tuple(), std::forward<T>(xs)...);
     }
 
     template <typename... T>
     constexpr decltype(auto) operator()(T&&... xs) &&
     {
-        return invoke_composition(std::move(*this).as_tuple(),
-                                  std::forward<T>(xs)...);
+        return detail::invoke_composition(std::move(*this).as_tuple(),
+                                          std::forward<T>(xs)...);
     }
 
     base_t& as_tuple() & { return *this; }
@@ -133,6 +97,8 @@ constexpr bool is_composed_v = false;
 
 template <typename... Fns>
 constexpr bool is_composed_v<composed<Fns...>> = true;
+
+namespace detail {
 
 template <typename Composed,
           std::enable_if_t<is_composed_v<std::decay_t<Composed>>>* = nullptr>
@@ -185,20 +151,18 @@ auto make_composed(TupleFns&& fns)
  * function pointers, member functions, etc.
  */
 template <typename F>
-auto comp(F&& f) -> detail::composed<std::decay_t<F>>
+constexpr auto comp(F&& f) -> F&&
 {
-    return {std::forward<F>(f)};
+    return std::forward<F>(f);
 }
 
 template <typename Fn, typename... Fns>
-auto comp(Fn&& f, Fns&&... fns)
+constexpr auto comp(Fn&& f, Fns&&... fns)
 {
     return detail::make_composed(
         std::tuple_cat(detail::to_function_tuple(std::forward<Fn>(f)),
                        detail::to_function_tuple(std::forward<Fns>(fns))...));
 }
-
-namespace detail {
 
 template <typename Lhs,
           typename Rhs,
@@ -209,42 +173,18 @@ constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
     return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));
 }
 
-} // namespace detail
-
 /*!
- * @see constantly
+ * Support function composition with operator|. Returns an object *f_1* that
+ * can be compose given functions @f$ f_n @f$ in the same manner as *comp*,
+ * with the syntax:
+ * @f[
+ *                g = f_1 | f_n;
+ * @f]
  */
-template <typename T>
-struct constantly_t
+template <typename F>
+constexpr auto make_composed(F&& f) -> composed<std::decay_t<F>>
 {
-    T value;
-
-    template <typename... ArgTs>
-    auto operator()(ArgTs&&...) & -> T&
-    {
-        return value;
-    }
-
-    template <typename... ArgTs>
-    auto operator()(ArgTs&&...) const& -> const T&
-    {
-        return value;
-    }
-
-    template <typename... ArgTs>
-    auto operator()(ArgTs&&...) && -> T&&
-    {
-        return std::move(value);
-    }
-};
-
-/*!
- * Similar to clojure.core/constantly
- */
-template <typename T>
-auto constantly(T&& value) -> constantly_t<std::decay_t<T>>
-{
-    return constantly_t<std::decay_t<T>>{std::forward<T>(value)};
+    return {std::forward<F>(f)};
 }
 
 } // namespace zug

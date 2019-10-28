@@ -11,6 +11,7 @@
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 #include <vector>
 
@@ -25,7 +26,7 @@ struct partition_by_tag
 template <typename MappingT>
 auto partition_by(MappingT&& mapping)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;
@@ -58,7 +59,7 @@ auto partition_by(MappingT&& mapping)
                            std::move(next_vector),
                            std::move(next_step)));
         };
-    };
+    });
 };
 
 template <typename T>

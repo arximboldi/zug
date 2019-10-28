@@ -20,12 +20,12 @@ namespace zug {
 template <typename ActionT>
 constexpr auto each(ActionT&& action)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             compat::invoke(action, is...);
             return step(ZUG_FWD(s), ZUG_FWD(is)...);
         };
-    };
+    });
 }
 
 } // namespace zug

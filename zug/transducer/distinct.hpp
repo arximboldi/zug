@@ -17,7 +17,7 @@
 
 namespace zug {
 
-ZUG_INLINE_CONSTEXPR struct distinct_t
+struct distinct_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -44,6 +44,8 @@ ZUG_INLINE_CONSTEXPR struct distinct_t
                 });
         };
     }
-} distinct{};
+};
+
+ZUG_INLINE_CONSTEXPR auto distinct = comp(distinct_t{});
 
 } // namespace zug

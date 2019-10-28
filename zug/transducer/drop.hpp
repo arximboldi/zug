@@ -10,6 +10,7 @@
 
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -19,7 +20,7 @@ namespace zug {
 template <typename IntegralT>
 constexpr auto drop(IntegralT n)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto count = state_data(ZUG_FWD(s), [&] { return n; });
             return count != 0 ? wrap_state(skip(step,
@@ -31,7 +32,7 @@ constexpr auto drop(IntegralT n)
                                                 ZUG_FWD(is)...),
                                            count);
         };
-    };
+    });
 }
 
 } // namespace zug

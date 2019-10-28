@@ -10,6 +10,7 @@
 
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -23,7 +24,7 @@ struct iter_tag
 template <typename InputRangeT>
 auto iter(InputRangeT&& range)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::cbegin;
             using std::cend;
@@ -45,7 +46,7 @@ auto iter(InputRangeT&& range)
                                                    *get<0>(data)++),
                                               std::move(data));
         };
-    };
+    });
 }
 
 template <typename T>

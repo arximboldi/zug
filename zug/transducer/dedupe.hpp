@@ -10,11 +10,12 @@
 
 #include <zug/detail/copy_traits.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 #include <zug/with_state.hpp>
 
 namespace zug {
 
-ZUG_INLINE_CONSTEXPR struct dedupe_t
+struct dedupe_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -38,6 +39,8 @@ ZUG_INLINE_CONSTEXPR struct dedupe_t
                 });
         };
     }
-} dedupe{};
+};
+
+ZUG_INLINE_CONSTEXPR auto dedupe = comp(dedupe_t{});
 
 } // namespace zug

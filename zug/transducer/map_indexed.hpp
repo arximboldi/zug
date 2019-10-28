@@ -19,7 +19,7 @@ namespace zug {
 template <typename MappingT>
 constexpr auto map_indexed(MappingT&& mapping)
 {
-    return comp(count(), map(std::forward<MappingT>(mapping)));
+    return count() | map(std::forward<MappingT>(mapping));
 }
 
 } // namespace zug

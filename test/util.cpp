@@ -6,6 +6,7 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
+#include <zug/compat/invoke.hpp>
 #include <zug/util.hpp>
 
 #include <catch2/catch.hpp>
@@ -100,6 +101,48 @@ TEST_CASE("comp: comp an lvalue comp")
 TEST_CASE("comp: comp a const lvalue comp")
 {
     const auto comped = comp(add_one);
-    auto result = comp(comped, comped)(10);
+    auto result       = comp(comped, comped)(10);
     CHECK(result == 12);
+}
+
+auto c_add_one   = comp([](int x) { return x + 1; });
+auto c_mult_five = comp([](int x) { return x * 5; });
+
+TEST_CASE("operator|: call composed functions returns output of composition")
+{
+    auto result = (c_add_one | c_add_one)(10);
+    CHECK(result == 12);
+}
+
+TEST_CASE("operator|: execution order is from right to left function")
+{
+    SECTION("add_one(mult_five(x))")
+    {
+        auto result = (c_add_one | c_mult_five)(10);
+        CHECK(result == 51);
+    }
+
+    SECTION("mult_five(add_one(x))")
+    {
+        auto result = (c_mult_five | c_add_one)(10);
+        CHECK(result == 55);
+    }
+}
+
+TEST_CASE("operator|: composable non-composable type")
+{
+    auto composable     = comp([](auto x) { return x + 1; });
+    auto non_composable = [](auto x) { return x + 1; };
+
+    SECTION("composable | non-composable")
+    {
+        auto result = (composable | non_composable)(10);
+        CHECK(result == 12);
+    }
+
+    SECTION("non-composable | composable")
+    {
+        auto result = (non_composable | composable)(10);
+        CHECK(result == 12);
+    }
 }

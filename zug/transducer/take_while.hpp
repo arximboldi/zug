@@ -10,13 +10,14 @@
 
 #include <zug/maybe_reduced.hpp>
 #include <zug/skip.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
 template <typename PredicateT>
 constexpr auto take_while(PredicateT predicate)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return compat::invoke(predicate, is...)
                        ? not_reduced(call(
@@ -24,7 +25,7 @@ constexpr auto take_while(PredicateT predicate)
                        : reduced(skip(
                              step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...));
         };
-    };
+    });
 }
 
 } // namespace zug

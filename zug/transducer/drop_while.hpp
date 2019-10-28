@@ -11,6 +11,7 @@
 #include <zug/compat/invoke.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -20,7 +21,7 @@ namespace zug {
 template <typename PredicateT>
 constexpr auto drop_while(PredicateT&& predicate)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto taking = state_data(ZUG_FWD(s), [] { return false; }) ||
                           !compat::invoke(predicate, is...);
@@ -30,7 +31,7 @@ constexpr auto drop_while(PredicateT&& predicate)
                        : skip(step, state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
                 taking);
         };
-    };
+    });
 }
 
 } // namespace zug
