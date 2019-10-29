@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/any_state.hpp>
+#include <zug/compose.hpp>
 #include <zug/meta.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
@@ -222,13 +223,14 @@ constexpr bool is_transducer_v<transducer<InputT, OutputT>> = true;
 template <
     typename Lhs,
     typename Rhs,
-    std::enable_if_t<!detail::is_composed_v<std::decay_t<Lhs>> &&
-                     !detail::is_composed_v<std::decay_t<Rhs>> &&
+
+    std::enable_if_t<!is_composed_v<std::decay_t<Lhs>> &&
+                     !is_composed_v<std::decay_t<Rhs>> &&
                      (detail::is_transducer_v<std::decay_t<Lhs>> ||
                       detail::is_transducer_v<std::decay_t<Rhs>>)>* = nullptr>
 constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
 {
     return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));
 }
-
+// namespace zug};
 } // namespace zug

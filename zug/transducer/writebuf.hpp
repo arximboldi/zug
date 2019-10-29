@@ -6,6 +6,7 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
+#include <zug/compose.hpp>
 #include <zug/util.hpp>
 
 #include <functional>

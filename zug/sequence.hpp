@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/tuple_utils.hpp>
 #include <zug/meta.hpp>
 #include <zug/meta/value_type.hpp>

@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/compose.hpp>
 #include <zug/into_vector.hpp>
 #include <zug/reducing/last.hpp>
 #include <zug/transduce.hpp>

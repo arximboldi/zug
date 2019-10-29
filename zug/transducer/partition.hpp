@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/lambda_wrapper.hpp>
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>

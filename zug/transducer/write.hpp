@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/copy_traits.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>

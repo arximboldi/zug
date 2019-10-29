@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/compose.hpp>
 #include <zug/into_vector.hpp>
 #include <zug/transducer/eager.hpp>
 #include <zug/transducer/filter.hpp>

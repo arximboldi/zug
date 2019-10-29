@@ -7,6 +7,7 @@
 //
 
 #include <zug/compat/apply.hpp>
+#include <zug/compose.hpp>
 #include <zug/util.hpp>
 
 namespace zug {

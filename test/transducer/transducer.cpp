@@ -1,3 +1,4 @@
+#include <zug/compose.hpp>
 #include <zug/reducing/last.hpp>
 #include <zug/transduce.hpp>
 #include <zug/transducer/map.hpp>

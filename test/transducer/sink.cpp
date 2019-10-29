@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/compose.hpp>
 #include <zug/into_vector.hpp>
 #include <zug/run.hpp>
 #include <zug/transducer/enumerate.hpp>

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/empty_transducer_error.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/util.hpp>

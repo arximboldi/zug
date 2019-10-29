@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/transducer/take.hpp>
 #include <zug/util.hpp>
 

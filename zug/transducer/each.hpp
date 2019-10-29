@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/compat/invoke.hpp>
+#include <zug/compose.hpp>
 #include <zug/util.hpp>
 
 namespace zug {

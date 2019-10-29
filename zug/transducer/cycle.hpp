@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/empty_transducer_error.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 

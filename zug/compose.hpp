@@ -151,9 +151,9 @@ auto make_composed(TupleFns&& fns)
  * function pointers, member functions, etc.
  */
 template <typename F>
-constexpr auto comp(F&& f) -> F&&
+constexpr auto comp(F&& f) -> composed<std::decay_t<F>>
 {
-    return std::forward<F>(f);
+    return {std::forward<F>(f)};
 }
 
 template <typename Fn, typename... Fns>
@@ -171,20 +171,6 @@ template <typename Lhs,
 constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
 {
     return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));
-}
-
-/*!
- * Support function composition with operator|. Returns an object *f_1* that
- * can be compose given functions @f$ f_n @f$ in the same manner as *comp*,
- * with the syntax:
- * @f[
- *                g = f_1 | f_n;
- * @f]
- */
-template <typename F>
-constexpr auto make_composed(F&& f) -> composed<std::decay_t<F>>
-{
-    return {std::forward<F>(f)};
 }
 
 } // namespace zug

@@ -30,6 +30,7 @@ struct deterministic_engine
 
 #define ABL_XFORM_DEFAULT_RANDOM_ENGINE deterministic_engine
 
+#include <zug/compose.hpp>
 #include <zug/transduce.hpp>
 #include <zug/transducer/random_sample.hpp>
 #include <zug/transducer/range.hpp>

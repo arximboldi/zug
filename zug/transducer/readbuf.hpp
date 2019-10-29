@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/iterator_range.hpp>
 #include <zug/maybe_reduced.hpp>
 #include <zug/util.hpp>

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/compat/invoke.hpp>
+#include <zug/compose.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
