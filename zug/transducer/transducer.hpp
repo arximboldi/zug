@@ -209,4 +209,26 @@ private:
     xform_t xform_;
 };
 
+namespace detail {
+
+template <typename T>
+constexpr bool is_transducer_v = false;
+
+template <typename InputT, typename OutputT>
+constexpr bool is_transducer_v<transducer<InputT, OutputT>> = true;
+
+} // namespace detail
+
+template <
+    typename Lhs,
+    typename Rhs,
+    std::enable_if_t<!detail::is_composed_v<std::decay_t<Lhs>> &&
+                     !detail::is_composed_v<std::decay_t<Rhs>> &&
+                     (detail::is_transducer_v<std::decay_t<Lhs>> ||
+                      detail::is_transducer_v<std::decay_t<Rhs>>)>* = nullptr>
+constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
+{
+    return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));
+}
+
 } // namespace zug
