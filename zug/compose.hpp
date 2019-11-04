@@ -51,10 +51,15 @@ constexpr decltype(auto) invoke_composition(Fns&& fns, Args&&... args)
         std::forward<Fns>(fns), std::forward<Args>(args)...);
 }
 
+struct pipeable
+{};
+
 } // namespace detail
 
 template <typename Fn, typename... Fns>
-struct composed : std::tuple<Fn, Fns...>
+struct composed
+    : detail::pipeable
+    , std::tuple<Fn, Fns...>
 {
     using base_t = std::tuple<Fn, Fns...>;
 
@@ -92,13 +97,25 @@ struct composed : std::tuple<Fn, Fns...>
     base_t&& as_tuple() && { return std::move(*this); }
 };
 
+namespace detail {
+
 template <typename T>
 constexpr bool is_composed_v = false;
 
 template <typename... Fns>
 constexpr bool is_composed_v<composed<Fns...>> = true;
 
-namespace detail {
+template <typename T, typename = void>
+constexpr bool is_pipeable_impl_v = false;
+
+template <typename T>
+constexpr bool
+    is_pipeable_impl_v<T,
+                       std::enable_if_t<std::is_base_of<pipeable, T>::value>> =
+        true;
+
+template <typename T>
+constexpr bool is_pipeable_v = detail::is_pipeable_impl_v<T>;
 
 template <typename Composed,
           std::enable_if_t<is_composed_v<std::decay_t<Composed>>>* = nullptr>
@@ -166,8 +183,8 @@ constexpr auto comp(Fn&& f, Fns&&... fns)
 
 template <typename Lhs,
           typename Rhs,
-          std::enable_if_t<is_composed_v<std::decay_t<Lhs>> ||
-                           is_composed_v<std::decay_t<Rhs>>>* = nullptr>
+          std::enable_if_t<detail::is_pipeable_v<std::decay_t<Lhs>> ||
+                           detail::is_pipeable_v<std::decay_t<Rhs>>>* = nullptr>
 constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
 {
     return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));

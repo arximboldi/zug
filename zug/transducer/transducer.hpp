@@ -137,7 +137,7 @@ struct get_reducing_fn
  *       @endcode
  */
 template <typename InputT = meta::pack<>, typename OutputT = InputT>
-class transducer
+class transducer : detail::pipeable
 {
 public:
     using in_step_t  = meta::unpack_t<detail::get_reducing_fn, InputT>;
@@ -210,27 +210,4 @@ private:
     xform_t xform_;
 };
 
-namespace detail {
-
-template <typename T>
-constexpr bool is_transducer_v = false;
-
-template <typename InputT, typename OutputT>
-constexpr bool is_transducer_v<transducer<InputT, OutputT>> = true;
-
-} // namespace detail
-
-template <
-    typename Lhs,
-    typename Rhs,
-
-    std::enable_if_t<!is_composed_v<std::decay_t<Lhs>> &&
-                     !is_composed_v<std::decay_t<Rhs>> &&
-                     (detail::is_transducer_v<std::decay_t<Lhs>> ||
-                      detail::is_transducer_v<std::decay_t<Rhs>>)>* = nullptr>
-constexpr auto operator|(Lhs&& lhs, Rhs&& rhs)
-{
-    return comp(std::forward<Lhs>(lhs), std::forward<Rhs>(rhs));
-}
-// namespace zug};
 } // namespace zug
