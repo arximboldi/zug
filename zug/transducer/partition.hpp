@@ -8,11 +8,13 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/lambda_wrapper.hpp>
 #include <zug/reduce.hpp>
 #include <zug/skip.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/tuplify.hpp>
+#include <zug/util.hpp>
 
 #include <vector>
 
@@ -28,7 +30,7 @@ using partition_container_t =
 template <typename SizeT>
 auto partition(SizeT size)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto data         = state_data(ZUG_FWD(s), [&] {
                 auto v = partition_container_t<decltype(is)...>{};
@@ -53,7 +55,7 @@ auto partition(SizeT size)
                 std::move(next_state),
                 std::make_tuple(std::move(next_vector), std::move(next_step)));
         };
-    };
+    });
 };
 
 template <typename T>

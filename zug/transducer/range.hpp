@@ -20,22 +20,21 @@ namespace zug {
 template <typename StopT>
 constexpr decltype(auto) range(StopT&& stop)
 {
-    return comp(count(), take(std::forward<StopT>(stop)));
+    return count() | take(std::forward<StopT>(stop));
 }
 
 template <typename StartT, typename StopT>
 constexpr decltype(auto) range(StartT&& start, StopT&& stop)
 {
-    return comp(count(start),
-                take(std::max(decltype(stop - start){}, stop - start)));
+    return count(start) |
+           take(std::max(decltype(stop - start){}, stop - start));
 }
 
 template <typename StartT, typename StopT, typename StepT>
 constexpr decltype(auto) range(StartT&& start, StopT&& stop, StepT&& step)
 {
-    return comp(count(start, step),
-                take(std::max(decltype((stop - start) / step){},
-                              (stop - start) / step)));
+    return count(start, step) | take(std::max(decltype((stop - start) / step){},
+                                              (stop - start) / step));
 }
 
 } // namespace zug

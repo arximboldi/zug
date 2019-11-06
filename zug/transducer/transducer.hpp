@@ -9,6 +9,7 @@
 #pragma once
 
 #include <zug/any_state.hpp>
+#include <zug/compose.hpp>
 #include <zug/meta.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
@@ -136,7 +137,7 @@ struct get_reducing_fn
  *       @endcode
  */
 template <typename InputT = meta::pack<>, typename OutputT = InputT>
-class transducer
+class transducer : detail::pipeable
 {
 public:
     using in_step_t  = meta::unpack_t<detail::get_reducing_fn, InputT>;

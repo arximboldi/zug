@@ -7,6 +7,8 @@
 //
 
 #include <zug/compat/apply.hpp>
+#include <zug/compose.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -61,7 +63,7 @@ auto apply_all_what_you_can_bitte(Fn&& fn, Tuple&& t, Tuples&&... ts)
  * Transducer that expands all unzipable inputs into the transducer. Unzipable
  * inputs are std::tuple<>, std::pair<> and std::array<>.
  */
-ZUG_INLINE_CONSTEXPR struct unzip_t
+struct unzip_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -72,6 +74,8 @@ ZUG_INLINE_CONSTEXPR struct unzip_t
                 ZUG_FWD(is)...);
         };
     }
-} unzip{};
+};
+
+ZUG_INLINE_CONSTEXPR auto unzip = comp(unzip_t{});
 
 } // namespace zug

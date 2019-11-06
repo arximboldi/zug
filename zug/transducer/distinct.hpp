@@ -8,16 +8,18 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/copy_traits.hpp>
 #include <zug/detail/tuple_utils.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 #include <zug/with_state.hpp>
 
 #include <unordered_set>
 
 namespace zug {
 
-ZUG_INLINE_CONSTEXPR struct distinct_t
+struct distinct_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -44,6 +46,8 @@ ZUG_INLINE_CONSTEXPR struct distinct_t
                 });
         };
     }
-} distinct{};
+};
+
+ZUG_INLINE_CONSTEXPR auto distinct = comp(distinct_t{});
 
 } // namespace zug

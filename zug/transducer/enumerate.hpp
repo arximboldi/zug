@@ -8,23 +8,38 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
+
+#include <type_traits>
+#include <utility>
 
 namespace zug {
 
 template <typename T>
+struct enumerate_from_t
+{
+    template <typename Step>
+    constexpr auto operator()(Step&& step) const
+    {
+        return [initial = initial, step = std::forward<Step>(step)](
+                   auto&& s, auto&&... is) mutable {
+            auto count = state_data(ZUG_FWD(s), constantly(initial));
+            return wrap_state(step(state_unwrap(ZUG_FWD(s)),
+                                   std::move(count),
+                                   ZUG_FWD(is)...),
+                              std::move(count) + static_cast<T>(1));
+        };
+    }
+
+    T initial;
+};
+
+template <typename T>
 constexpr auto enumerate_from(T&& initial)
 {
-    return [=](auto&& step) {
-        return [=](auto&& s, auto&&... is) mutable {
-            auto count = state_data(ZUG_FWD(s), constantly(initial));
-            return wrap_state(
-                step(
-                    state_unwrap(ZUG_FWD(s)), std::move(count), ZUG_FWD(is)...),
-                std::move(count) + static_cast<decltype(initial)>(1));
-        };
-    };
+    return comp(enumerate_from_t<std::decay_t<T>>{std::forward<T>(initial)});
 }
 
 ZUG_INLINE_CONSTEXPR auto enumerate = enumerate_from(std::size_t{});

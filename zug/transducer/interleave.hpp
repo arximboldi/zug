@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/iterator_range.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 #include <vector>
 
@@ -37,7 +39,7 @@ auto interleave_step(StepT&& step, StateT&& s, InputT&& i, InputTs&&... is)
 
 } // namespace detail
 
-ZUG_INLINE_CONSTEXPR struct interleave_t
+struct interleave_t
 {
     template <typename StepT>
     auto operator()(StepT&& step) const
@@ -47,6 +49,8 @@ ZUG_INLINE_CONSTEXPR struct interleave_t
                 step, step(ZUG_FWD(s), ZUG_FWD(i)), ZUG_FWD(is)...);
         };
     }
-} interleave{};
+};
+
+ZUG_INLINE_CONSTEXPR auto interleave = comp(interleave_t{});
 
 } // namespace zug

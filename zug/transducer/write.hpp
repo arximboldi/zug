@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/copy_traits.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 #include <zug/with_state.hpp>
 
 #include <functional>
@@ -60,7 +62,7 @@ void write_inputs(OutputStreamT& stream,
 template <typename OutputStreamT, typename InSeparatorT, typename ArgSeparatorT>
 auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)
 {
-    return [=, stream_ref = std::ref(stream)](auto&& step) {
+    return comp([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::begin;
             using std::end;
@@ -78,7 +80,7 @@ auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)
                         step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...));
                 });
         };
-    };
+    });
 }
 
 template <typename OutputStreamT, typename InSeparatorT = detail::empty_output>

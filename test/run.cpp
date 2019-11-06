@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/compose.hpp>
 #include <zug/run.hpp>
 #include <zug/transducer/map.hpp>
 #include <zug/transducer/read.hpp>

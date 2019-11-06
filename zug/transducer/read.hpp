@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/maybe_reduced.hpp>
 #include <zug/skip.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -22,7 +24,7 @@ namespace zug {
 template <typename ValueT, typename InputStreamT>
 auto read(InputStreamT& stream)
 {
-    return [=, stream_ref = std::ref(stream)](auto&& step) {
+    return comp([=, stream_ref = std::ref(stream)](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             ValueT value{};
             auto& stream = stream_ref.get();
@@ -39,7 +41,7 @@ auto read(InputStreamT& stream)
                                 ZUG_FWD(is)...,
                                 std::move(value)));
         };
-    };
+    });
 }
 
 template <typename T1, typename T2, typename... Ts, typename InputStreamT>

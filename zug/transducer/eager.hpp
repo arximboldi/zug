@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/iterator_range.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 #include <vector>
 
@@ -25,7 +27,7 @@ struct eager_tag
 template <typename Mapping>
 auto eager(Mapping mapping)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using container_t =
                 std::vector<std::decay_t<decltype(tuplify(is...))>>;
@@ -36,7 +38,7 @@ auto eager(Mapping mapping)
             return wrap_state<eager_tag>(state_unwrap(ZUG_FWD(s)),
                                          std::move(data));
         };
-    };
+    });
 }
 
 template <typename T>

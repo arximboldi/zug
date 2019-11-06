@@ -10,6 +10,8 @@
 
 #include <zug/detail/inline_constexpr.hpp>
 
+#include <tuple>
+
 namespace zug {
 
 /*!

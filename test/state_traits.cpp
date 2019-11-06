@@ -7,6 +7,7 @@
 //
 
 #include <zug/any_state.hpp>
+#include <zug/compose.hpp>
 #include <zug/reducing/last.hpp>
 #include <zug/state_wrapper.hpp>
 #include <zug/transducer/enumerate.hpp>

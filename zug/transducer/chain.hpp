@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/empty_transducer_error.hpp>
 #include <zug/reduce_nested.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 #include <zug/with_state.hpp>
 
 #include <zug/detail/copy_traits.hpp>
@@ -27,7 +29,7 @@ struct chainr_tag
 template <typename InputRange>
 auto chainr(InputRange range)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             auto data = state_data(
                 ZUG_FWD(s), [&] { return std::make_pair(&step, &range); });
@@ -35,7 +37,7 @@ auto chainr(InputRange range)
                 (*data.first)(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
                 std::move(data));
         };
-    };
+    });
 }
 
 template <typename... InputRangeTs>
@@ -66,7 +68,7 @@ decltype(auto) state_wrapper_complete(chainr_tag, T&& wrapper)
 template <typename InputRange>
 auto chainl(InputRange range)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             return with_state(
                 ZUG_FWD(s),
@@ -85,7 +87,7 @@ auto chainl(InputRange range)
                         step(state_unwrap(ZUG_FWD(st)), ZUG_FWD(is)...));
                 });
         };
-    };
+    });
 }
 
 template <typename... InputRangeTs>

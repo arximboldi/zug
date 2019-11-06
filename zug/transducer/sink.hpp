@@ -27,6 +27,7 @@
 #pragma once
 
 #include <zug/compat/invoke.hpp>
+#include <zug/compose.hpp>
 #include <zug/util.hpp>
 
 namespace zug {
@@ -44,12 +45,12 @@ namespace zug {
 template <typename ActionT>
 auto sink(ActionT&& action)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             compat::invoke(action, ZUG_FWD(is)...);
             return step(ZUG_FWD(s));
         };
-    };
+    });
 }
 
 } // namespace zug

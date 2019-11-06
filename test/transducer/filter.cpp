@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/compose.hpp>
 #include <zug/into_vector.hpp>
 #include <zug/reducing/last.hpp>
 #include <zug/transduce.hpp>
@@ -47,6 +48,21 @@ TEST_CASE("filter, composition")
     //
     auto res =
         transduce(comp(filter(odd), map(times2)), std::plus<int>{}, 1, v);
+    CHECK(res == 17);
+}
+
+TEST_CASE("filter, operator| composition")
+{
+    auto v      = std::vector<int>{1, 2, 3, 6};
+    auto times2 = [](int x) { return x * 2; };
+    auto odd    = [](int x) { return x % 2 == 0; };
+
+    // transducers compose from left to right, this is equivalent to
+    // Haskell-like expression:
+    //
+    //   foldl (+) $ map times2 $ filter odd $ v
+    //
+    auto res = transduce(filter(odd) | map(times2), std::plus<int>{}, 1, v);
     CHECK(res == 17);
 }
 

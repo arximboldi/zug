@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <zug/compose.hpp>
 #include <zug/detail/empty_transducer_error.hpp>
 #include <zug/state_wrapper.hpp>
+#include <zug/util.hpp>
 
 namespace zug {
 
@@ -23,7 +25,7 @@ struct cycle_tag
 template <typename InputRangeT>
 constexpr auto cycle(InputRangeT range)
 {
-    return [=](auto&& step) {
+    return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
             using std::get;
             using std::begin;
@@ -44,7 +46,7 @@ constexpr auto cycle(InputRangeT range)
                 step(state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)..., *get<0>(data)++),
                 std::move(data));
         };
-    };
+    });
 }
 
 template <typename InputRangeT, typename... InputRangeTs>
