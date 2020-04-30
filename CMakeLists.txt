@@ -64,3 +64,7 @@ endif()
 if(zug_BUILD_EXAMPLES)
   add_subdirectory(example)
 endif()
+
+if (zug_BUILD_DOCS)
+  add_subdirectory(doc)
+endif()

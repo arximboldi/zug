@@ -34,6 +34,12 @@ the-stdenv.mkDerivation rec {
     cmake
     boost
     ccache
+    old-nixpkgs.doxygen
+    (old-nixpkgs.python.withPackages (ps: [
+      ps.sphinx
+      docs.breathe
+      docs.recommonmark
+    ]))
   ];
   shellHook = ''
     export ZUG_ROOT=`dirname ${toString ./shell.nix}`
