@@ -7,6 +7,7 @@ matrix:
     - env: DO=check TYPE=Debug COMPILER=clang
     - env: DO=check TYPE=Release
     - env: DO=build
+    - env: DO=docs
 
 before_install:
   - |
@@ -15,8 +16,25 @@ before_install:
     function build-p { [[ "${DO}" == build ]]; }
     function check-p { [[ "${DO}" == check ]]; }
     function coverage-p { [[ "${COVERAGE}" == true ]]; }
+    function docs-p  { [[ "${DO}" == docs ]]; }
     function with-nix {
         nix-shell --argstr compiler $COMPILER --run "set -e; $1"
+    }
+    function deploy-p {
+        [[ "${TRAVIS_PULL_REQUEST}" == "false" && \
+           "${TRAVIS_BRANCH}" == "master" ]]
+    }
+    function upload-p {
+        [[ -n "$encrypted_9275be4a6b94_key" && \
+           -n "$encrypted_9275be4a6b94_iv" ]]
+    }
+    function decrypt-ssh-key {
+        openssl aes-256-cbc \
+            -K  $encrypted_9275be4a6b94_key \
+            -iv $encrypted_9275be4a6b94_iv \
+            -in tools/travis/ssh-key.enc \
+            -out tools/travis/ssh-key -d
+        chmod 600 tools/travis/ssh-key
     }
 
 install:
@@ -45,3 +63,7 @@ after_success:
         find . -name \"*.gcno\" | xargs gcov -bcprs ${PWD}
         bash <(curl -s https://codecov.io/bash) -x gcov
     "
+    if upload-p; then
+        decrypt-ssh-key
+        ! docs-p || ! deploy-p || with-nix "cd build && make upload-docs"
+    fi
