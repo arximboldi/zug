@@ -73,4 +73,25 @@ struct result_of<XformT, meta::pack<InputTs...>>
 template <typename XformT, typename... InputTs>
 using result_of_t = typename result_of<XformT, InputTs...>::type;
 
+namespace detail {
+
+template <typename Xform, typename Inputs, typename Enable = void>
+struct is_transducer_impl : std::false_type
+{};
+
+template <typename Xform, typename... Inputs>
+struct is_transducer_impl<
+    Xform,
+    meta::pack<Inputs...>,
+    meta::void_t<decltype(state_complete(std::declval<Xform>()(last)(
+        std::declval<meta::bottom>(), std::declval<Inputs>()...)))>>
+    : std::true_type
+{};
+
+} // namespace detail
+
+template <typename Xform, typename... Inputs>
+struct is_transducer : detail::is_transducer_impl<Xform, meta::pack<Inputs...>>
+{};
+
 } // namespace zug

@@ -6,14 +6,24 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
-#include <zug/into.hpp>
-#include <zug/reducing/first.hpp>
 #include <zug/transducer/map.hpp>
+
+#include <zug/reducing/first.hpp>
 #include <zug/transducer/take.hpp>
+
+#include <zug/into.hpp>
+#include <zug/meta.hpp>
 
 #include <catch2/catch.hpp>
 
 using namespace zug;
+
+TEST_CASE("concept")
+{
+    auto t = map([](int x) { return x; });
+    static_assert(is_transducer<decltype(t), int>::value, "");
+    static_assert(!is_transducer<decltype(t), std::string>::value, "");
+}
 
 TEST_CASE("map, mapping")
 {
