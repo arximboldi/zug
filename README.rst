@@ -62,31 +62,41 @@ sequence of integers, resulting in a sequence of strings.  Note, however, that
 this transformation makes no reference to whatever it is transforming.  In fact,
 we can apply it in many ways.
 
-Using iterators
-~~~~~~~~~~~~~~~
+Transforming a range
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: c++
 
-   auto data = std::vector<int>{ ... };
-   auto xformed = zug::sequence(xf, data);
-   std::copy(xformed.begin(), xformed.end(), ...);
+   auto data1 = std::vector<int>{3, -2, 42, -10};
+   auto data2 = zug::into(std::vector<std::string>{}, xf, data);
+   assert(data2 == {"3", "42"});
+
+As a lazy iterator
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: c++
+
+   auto data1 = std::vector<int>{ ... };
+   auto data2 = zug::sequence(xf, data);
+   std::copy(data2.begin(), data2.end(), ...);
 
 Generators and sinks
 ~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: c++
 
-   zug::run(zug::read<int>(std::cin)
-          | xf
-          | zug::write(std::cout));
+   zug::run(zug::read<int>(std::cin) | xf |
+            zug::write(std::cout));
 
-Transforming Lager cursors
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reads integers from the terminal and outputs back the positive ones.
+
+Transforming cursors
+~~~~~~~~~~~~~~~~~~~~
 
 The library is used in `Lager`_, a library implementing the unidirectional
-data-flow architecture for C++ interactive applications. It is used to be able
-to treat reactive values as a temporal sequence that can be transformed in
-arbitrary ways, for example:
+data-flow architecture for C++ interactive applications. It is used to treat
+reactive values as a temporal sequence that can be transformed in arbitrary
+ways. For example:
 
 .. _Lager: https://sinusoid.es/lager
 .. code-block:: c++

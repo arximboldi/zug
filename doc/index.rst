@@ -10,8 +10,10 @@ Contents
    :maxdepth: 3
 
    introduction
+   design
    transducer
    reducing
+   processes
 
 .. toctree::
    :caption: Extras
