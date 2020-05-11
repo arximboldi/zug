@@ -14,9 +14,6 @@
 
 namespace zug {
 
-/*!
- * Similar to clojure.core/cat$1
- */
 struct cat_t
 {
     template <typename StepT>
@@ -28,6 +25,23 @@ struct cat_t
     }
 };
 
+/*!
+ * Flattens the sequence one level.  If multiple inputs are received, it
+ * flattens all inputs in parallel.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/cat.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/cat.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 ZUG_INLINE_CONSTEXPR auto cat = comp(cat_t{});
 
 } // namespace zug

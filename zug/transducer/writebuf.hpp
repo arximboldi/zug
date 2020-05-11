@@ -17,8 +17,16 @@ namespace zug {
 
 /*!
  * Generator transducer that writes buffers into the stream and passes them into
- * the sequence.  It passes them into the sequence as an range with `char*`
- * iterators.
+ * the sequence.  A buffer shall be a range with `char*` iterators.
+ * Lets `n` elements through and finishes.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/writebuf.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename OutputStreamT>
 auto writebuf(OutputStreamT& stream)

@@ -14,10 +14,9 @@
 
 namespace zug {
 
-/*!
- * Function that forwards its argument if only one element passed,
- * otherwise it makes a tuple.
- */
+//! @defgroup util
+//! @{
+
 ZUG_INLINE_CONSTEXPR struct tuplify_t
 {
     constexpr std::tuple<> operator()() const { return {}; };
@@ -34,6 +33,13 @@ ZUG_INLINE_CONSTEXPR struct tuplify_t
         return std::make_tuple(std::forward<InputT>(in),
                                std::forward<InputTs>(ins)...);
     }
-} tuplify{};
+}
+/*!
+ * Function object that forwards its argument if one single argument passed,
+ * otherwise it returns a tuple with all the passed in arguments.
+ */
+tuplify{};
+
+//! @}
 
 } // namespace zug

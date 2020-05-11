@@ -15,9 +15,11 @@ using namespace zug;
 
 TEST_CASE("each, each")
 {
+    // example1 {
     auto v  = std::vector<int>{1, 2, 3, 6};
     auto r1 = std::vector<int>{};
     auto r2 = into_vector(each([&](int x) { r1.push_back(x); }), v);
     CHECK(v == r1);
     CHECK(v == r2);
+    // }
 }

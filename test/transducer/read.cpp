@@ -17,20 +17,21 @@ using namespace zug;
 
 TEST_CASE("read, into")
 {
+    // example1 {
     auto stream = std::stringstream{"1 2 3 4 5 6"};
     auto res    = into_vector(read<int>(stream));
-    CHECK(res == (decltype(res){1, 2, 3, 4, 5, 6}));
+    CHECK(res == std::vector<int>{1, 2, 3, 4, 5, 6});
+    // }
 }
 
 TEST_CASE("read, into variadic")
 {
-    using tup = std::tuple<int, std::string>;
-
+    // example2 {
     auto stream = std::stringstream{"1 hello 2 my 3 friend 4 !!"};
     auto res    = into_vector(read<int, std::string>(stream));
-    CHECK(res ==
-          (decltype(res){
-              tup(1, "hello"), tup(2, "my"), tup(3, "friend"), tup(4, "!!")}));
+    CHECK(res == std::vector<std::tuple<int, std::string>>{
+                     {1, "hello"}, {2, "my"}, {3, "friend"}, {4, "!!"}});
+    // }
 }
 
 TEST_CASE("read, into ends on bad input")

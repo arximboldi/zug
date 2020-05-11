@@ -24,6 +24,17 @@ bool state_wrapper_data_is_reduced(take_tag, T&& n)
     return std::forward<T>(n) <= 0;
 }
 
+/*!
+ * Lets `n` elements through and finishes.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/take.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename IntegralT>
 constexpr auto take(IntegralT n)
 {

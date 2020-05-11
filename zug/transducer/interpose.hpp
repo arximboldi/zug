@@ -30,6 +30,17 @@ interp(Step&& step, State&& st, Value&& value, std::index_sequence<I...>)
 
 } // namespace detail
 
+/*!
+ * Feeds the values passed as arguments in between the elements of the stream.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/interpose.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename... ValueTs>
 auto interpose(ValueTs&&... xs)
 {

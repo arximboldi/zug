@@ -14,6 +14,7 @@ Contents
    transducer
    reducing
    processes
+   type-erasure
 
 .. toctree::
    :caption: Extras

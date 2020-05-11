@@ -8,13 +8,11 @@
 
 #pragma once
 
+#include <zug/util.hpp>
+
 namespace zug {
 
-/*!
- * Reducing function that emplaces back at the collection that is
- * uses as state.
- */
-ZUG_INLINE_CONSTEXPR struct emplacing_back_t
+struct emplacing_back_t
 {
     template <typename StateT, typename... InputTs>
     decltype(auto) operator()(StateT&& st, InputTs&&... ins) const
@@ -22,6 +20,12 @@ ZUG_INLINE_CONSTEXPR struct emplacing_back_t
         st.emplace_back(ZUG_FWD(ins)...);
         return ZUG_FWD(st);
     }
-} emplacing_back{};
+};
+
+/*!
+ * Reducing function that emplaces back at the collection that is
+ * uses as state.
+ */
+ZUG_INLINE_CONSTEXPR emplacing_back_t emplacing_back{};
 
 } // namespace zug

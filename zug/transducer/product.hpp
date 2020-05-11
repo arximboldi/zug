@@ -39,11 +39,6 @@ auto reduce_nested_non_empty_product(ReducingFnT&& step,
 
 } // namespace detail
 
-/*!
- * Transducer combines every element that passes by with every element
- * in the sequence that it takes as arguemnt.
- * Like itertools.product, from Python.
- */
 template <typename InputRangeT>
 constexpr auto product(InputRangeT&& r)
 {
@@ -56,14 +51,28 @@ constexpr auto product(InputRangeT&& r)
     });
 }
 
-template <typename InputRangeT1,
-          typename InputRangeT2,
-          typename... InputRangeTs>
-constexpr auto
-product(InputRangeT1&& r1, InputRangeT2&& r2, InputRangeTs&&... rs)
+/*!
+ * Transducer combines every element that passes by with every element in the
+ * range that it takes as argument.  If multiple ranges are passed, it generates
+ * all combinations of elements from all of them.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/product.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/product.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
+template <typename InputRangeT1, typename... InputRangeTs>
+constexpr auto product(InputRangeT1&& r1, InputRangeTs&&... rs)
 {
     return comp(product(std::forward<InputRangeT1>(r1)),
-                product(std::forward<InputRangeT2>(r2)),
                 product(std::forward<InputRangeTs>(rs))...);
 }
 

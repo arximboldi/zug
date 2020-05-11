@@ -15,8 +15,17 @@
 namespace zug {
 
 /*!
- * Transducer that evaluates `action` on each input, forwarding the
- * input down the original inputs down the transducer chain.
+ * Transducer that evaluates the function `action` on each input, forwarding the
+ * input down the original inputs down the transducer chain.  The provided
+ * function is used only for side-effects.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/each.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename ActionT>
 constexpr auto each(ActionT&& action)

@@ -56,8 +56,36 @@ void write_inputs(OutputStreamT& stream,
 } // namespace detail
 
 /*!
- * Transducer that writes the into a given @a `stream` using the
- * `operator <<`.  It also forwards the values for further processing.
+ * Transducer that writes the into a given `stream` using the `operator <<`.  It
+ * also forwards the values for further processing.
+ *
+ * Note that `in_sep` and `arg_sep` are optional separators. The former is used
+ * to separate inputs, and the latter is used to spearate arguments of one
+ * single input. If `arg_sep` is not specified but `in_sep` is, the latter is
+ * used also to separate arguments.  By default, no separator is used.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/write.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/write.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/write.cpp
+ *      :language: c++
+ *      :start-after: // example3 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/write.cpp
+ *      :language: c++
+ *      :start-after: // example4 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename OutputStreamT, typename InSeparatorT, typename ArgSeparatorT>
 auto write(OutputStreamT& stream, InSeparatorT in_sep, ArgSeparatorT arg_sep)

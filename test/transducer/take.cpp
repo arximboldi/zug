@@ -10,6 +10,7 @@
 
 #include <zug/compose.hpp>
 #include <zug/into.hpp>
+#include <zug/into_vector.hpp>
 #include <zug/reducing/first.hpp>
 #include <zug/transducer/cat.hpp>
 #include <zug/transducer/map.hpp>
@@ -23,10 +24,11 @@ using namespace zug;
 
 TEST_CASE("take, take")
 {
-    auto v = std::vector<int>{1, 2, 3, 4, 5};
-
-    auto res = into(std::vector<int>{}, take(3), v);
-    CHECK(res == (std::vector<int>{1, 2, 3}));
+    // example1 {
+    auto v   = std::vector<int>{1, 2, 3, 4, 5};
+    auto res = into_vector(take(3), v);
+    CHECK(res == std::vector<int>{1, 2, 3});
+    // }
 }
 
 TEST_CASE("take, take cat terminates early")

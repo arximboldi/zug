@@ -16,7 +16,18 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/take_nth$1
+ * Lets every nth elements of the sequence through.
+ *
+ * Similar to
+ * [clojure.core/take-nth](https://clojuredocs.org/clojure.core/take-nth).
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/take_nth.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename IntegralT>
 auto take_nth(IntegralT nth)

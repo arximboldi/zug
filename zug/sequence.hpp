@@ -45,8 +45,7 @@ struct sequence_data
     };
 
     using reductor_t =
-        empty_reductor_fn<std::decay_t<std::result_of_t<XformT(step_t)>>,
-                          state_t>;
+        empty_reductor<std::decay_t<std::result_of_t<XformT(step_t)>>, state_t>;
 
     sequence_data(const XformT& xform)
         : impl_{std::size_t{}, cache_t{}, reductor_t{xform(step_t{}), this}}
@@ -130,6 +129,9 @@ private:
 
 } // namespace detail
 
+//! @defgroup sequence
+//! @{
+
 /*!
  * Range adaptor that transduces the ranges in `RangeTs` with the
  * transducer `XformT`, producing values of `ValueT`.  It also works
@@ -193,10 +195,15 @@ private:
     xform_t xform_;
 };
 
+//! @}
+
 namespace detail {
 struct deduce_value_type
 {};
 } // namespace detail
+
+//! @defgroup sequence
+//! @{
 
 /*!
  * Factory for `sequence_range` values producing an iterable range out
@@ -217,5 +224,7 @@ auto sequence(XformT&& xform, const RangeTs&... ranges)
 {
     return {std::forward<XformT>(xform), ranges...};
 }
+
+//! @}
 
 } // namespace zug

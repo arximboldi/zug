@@ -14,24 +14,48 @@
 
 namespace zug {
 
-/*!
- * Generator transducer version of Python `range`
- */
 template <typename StopT>
-constexpr decltype(auto) range(StopT&& stop)
+constexpr auto range(StopT&& stop)
 {
     return count() | take(std::forward<StopT>(stop));
 }
 
 template <typename StartT, typename StopT>
-constexpr decltype(auto) range(StartT&& start, StopT&& stop)
+constexpr auto range(StartT&& start, StopT&& stop)
 {
     return count(start) |
            take(std::max(decltype(stop - start){}, stop - start));
 }
 
+/*!
+ * Produces numbers in the range @f$ [start, stop) @f$ in steps of size @f$ step
+ * @f$. `start` and `step` are optional.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/range.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/range.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/range.cpp
+ *      :language: c++
+ *      :start-after: // example3 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/range.cpp
+ *      :language: c++
+ *      :start-after: // example4 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename StartT, typename StopT, typename StepT>
-constexpr decltype(auto) range(StartT&& start, StopT&& stop, StepT&& step)
+constexpr auto range(StartT&& start, StopT&& stop, StepT&& step)
 {
     return count(start, step) | take(std::max(decltype((stop - start) / step){},
                                               (stop - start) / step));

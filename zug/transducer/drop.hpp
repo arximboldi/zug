@@ -16,7 +16,15 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/drop$1
+ * Removes the first `n` elements from the sequence.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/drop.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename IntegralT>
 constexpr auto drop(IntegralT n)

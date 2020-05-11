@@ -20,7 +20,7 @@ using namespace zug;
 
 TEST_CASE("reductor, reductor")
 {
-    auto r = reductor(std::plus<>{}, 0, 1);
+    auto r = make_reductor(std::plus<>{}, 0, 1);
     r(2);
     r(3);
     r(4);
@@ -29,7 +29,7 @@ TEST_CASE("reductor, reductor")
 
 TEST_CASE("reductor, empty reductor")
 {
-    auto r = empty_reductor<int>(std::plus<>{}, 0);
+    auto r = make_empty_reductor<int>(std::plus<>{}, 0);
     r(2);
     r(3);
     r(4);
@@ -38,7 +38,7 @@ TEST_CASE("reductor, empty reductor")
 
 TEST_CASE("reductor, reductor no move")
 {
-    auto r = reductor(std::plus<>{}, std::string{}, "");
+    auto r = make_reductor(std::plus<>{}, std::string{}, "");
     r("hello");
     r(" ");
     r("world");
@@ -48,7 +48,7 @@ TEST_CASE("reductor, reductor no move")
 
 TEST_CASE("reductor, reductor chaining")
 {
-    auto result = reductor(std::plus<>{}, std::string{}, "")("hello")(" ")(
+    auto result = make_reductor(std::plus<>{}, std::string{}, "")("hello")(" ")(
                       "my")(" ")("friend")("!")
                       .complete();
     CHECK(result == "hello my friend!");
@@ -57,7 +57,7 @@ TEST_CASE("reductor, reductor chaining")
 TEST_CASE("reductor, reductor move")
 {
     auto s = testing::copy_spy<>{};
-    auto r = reductor(first, std::move(s), 0);
+    auto r = make_reductor(first, std::move(s), 0);
     r(1);
     r(2);
     r(3);
@@ -67,7 +67,7 @@ TEST_CASE("reductor, reductor move")
 
 TEST_CASE("reductor, generator")
 {
-    auto r = reductor(enumerate(last), -1);
+    auto r = make_reductor(enumerate(last), -1);
     CHECK(r.complete() == 0);
     r();
     CHECK(r.complete() == 1);
@@ -77,7 +77,7 @@ TEST_CASE("reductor, generator")
 
 TEST_CASE("reductor, generator empty")
 {
-    auto r = empty_reductor(enumerate(last), std::size_t{42});
+    auto r = make_empty_reductor(enumerate(last), std::size_t{42});
     CHECK(r.complete() == 42u);
     r();
     CHECK(r.complete() == 0u);
@@ -87,7 +87,7 @@ TEST_CASE("reductor, generator empty")
 
 TEST_CASE("reductor, termination")
 {
-    auto r = reductor(take(4)(enumerate(last)), 0);
+    auto r = make_reductor(take(4)(enumerate(last)), 0);
     CHECK(r());
     CHECK(r());
     CHECK(!r());
@@ -96,7 +96,7 @@ TEST_CASE("reductor, termination")
 
 TEST_CASE("reductor, termination empty")
 {
-    auto r = empty_reductor(take(4)(enumerate(last)), 0);
+    auto r = make_empty_reductor(take(4)(enumerate(last)), 0);
     CHECK(r());
     CHECK(r());
     CHECK(r());
@@ -106,7 +106,7 @@ TEST_CASE("reductor, termination empty")
 
 TEST_CASE("reductor, current")
 {
-    auto r = empty_reductor(take(4)(enumerate(last)), std::size_t{0});
+    auto r = make_empty_reductor(take(4)(enumerate(last)), std::size_t{0});
     CHECK(r());
     CHECK(r.current() == 0);
     r.current(std::size_t{10});
@@ -121,7 +121,7 @@ TEST_CASE("reductor, current")
 
 TEST_CASE("reductor, constant")
 {
-    const auto r1  = reductor(enumerate(last), 0);
+    const auto r1  = make_reductor(enumerate(last), 0);
     const auto r2  = r1();
     const auto r2_ = r1();
     const auto r3  = r2();

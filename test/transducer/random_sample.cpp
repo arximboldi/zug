@@ -28,7 +28,7 @@ struct deterministic_engine
     std::uint64_t operator()() { return count += max() / 6; }
 };
 
-#define ABL_XFORM_DEFAULT_RANDOM_ENGINE deterministic_engine
+#define ZUG_DEFAULT_RANDOM_ENGINE deterministic_engine
 
 #include <zug/compose.hpp>
 #include <zug/transduce.hpp>
@@ -39,17 +39,19 @@ using namespace zug;
 
 TEST_CASE("random_sample, simple")
 {
-    CHECK(transduce(comp(range(20), random_sample(0.5)),
-                    std::plus<std::size_t>{},
+    // example1 {
+    CHECK(transduce(range(20) | random_sample(0.5),
+                    std::plus<>{},
                     std::size_t{}) == 100);
 
-    CHECK(transduce(comp(range(20), random_sample(1)),
-                    std::plus<std::size_t>{},
+    CHECK(transduce(range(20) | random_sample(1),
+                    std::plus<>{},
                     std::size_t{}) == 190);
 
-    CHECK(transduce(comp(range(20), random_sample(0)),
-                    std::plus<std::size_t>{},
+    CHECK(transduce(range(20) | random_sample(0), //
+                    std::plus<>{},
                     std::size_t{}) == 0);
+    // }
 }
 
 TEST_CASE("random_sample, custom generator")

@@ -14,10 +14,6 @@
 
 namespace zug {
 
-/*!
- * Generator transducer produces the values passed as parameter
- * infinitely.
- */
 template <typename ValueT>
 constexpr auto repeat(ValueT&& value)
 {
@@ -28,6 +24,23 @@ constexpr auto repeat(ValueT&& value)
     });
 }
 
+/*!
+ * Generator transducer produces the values passed as parameter
+ * infinitely.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/repeat.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/repeat.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename ValueT, typename... ValueTs>
 constexpr auto repeat(ValueT&& r, ValueTs&&... rs)
 {
@@ -38,6 +51,14 @@ constexpr auto repeat(ValueT&& r, ValueTs&&... rs)
 /*!
  * Generator transducer produces the values passed as parameter
  * up to `n` times.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/repeat.cpp
+ *      :language: c++
+ *      :start-after: // example3 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename IntegralT, typename... ValueTs>
 constexpr auto repeatn(IntegralT&& n, ValueTs&&... rs)

@@ -18,11 +18,12 @@ using namespace zug;
 
 TEST_CASE("replace, replace")
 {
+    // example1 {
     auto table = std::map<std::string, std::string>{{"hola", "adios"}};
     auto v     = std::vector<std::string>{"hola", " ", "amigo"};
-
     CHECK(transduce(replace(table), std::plus<>{}, std::string{}, v) ==
           "adios amigo");
+    // }
 }
 
 TEST_CASE("replace, replace variadic")
@@ -41,25 +42,28 @@ TEST_CASE("replace, replace variadic")
 
 TEST_CASE("replace, replace all")
 {
-    auto table = std::map<std::string, int>{{"hola", 12}, {"amigo", 42}};
+    // example2 {
+    auto table = std::map<std::string, int>{{"hola", 1}, {"amigo", 2}};
     auto v     = std::vector<std::string>{"hola", " ", "amigo"};
-
-    CHECK(transduce(replace_all(table), std::plus<>{}, int{}, v) == 54);
+    CHECK(transduce(replace_all(table), std::plus<>{}, int{}, v) == 3);
+    // }
 }
 
 TEST_CASE("replace, replace safe pass")
 {
-    auto table = std::map<std::string, int>{{"hola", 12}, {"amigo", 42}};
+    // example3 {
+    auto table = std::map<std::string, int>{{"hola", 1}, {"amigo", 2}};
     auto v     = std::vector<std::string>{"hola", "amigo"};
-
-    CHECK(transduce(replace_all_safe(table), std::plus<>{}, int{}, v) == 54);
+    CHECK(transduce(replace_all_safe(table), std::plus<>{}, int{}, v) == 3);
+    // }
 }
 
 TEST_CASE("replace, replace safe exception")
 {
+    // example4 {
     auto table = std::map<std::string, int>{{"hola", 12}, {"amigo", 42}};
     auto v     = std::vector<std::string>{"hola", "oops", "amigo"};
-
     CHECK_THROWS_AS(transduce(replace_all_safe(table), std::plus<>{}, int{}, v),
                     std::out_of_range);
+    // }
 }

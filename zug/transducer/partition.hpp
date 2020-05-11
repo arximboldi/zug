@@ -27,6 +27,17 @@ template <typename... InputTs>
 using partition_container_t =
     std::vector<std::decay_t<decltype(tuplify(std::declval<InputTs>()...))>>;
 
+/*!
+ * Groups elements of the sequence in vectors of `size` elements.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/partition.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename SizeT>
 auto partition(SizeT size)
 {

@@ -44,6 +44,17 @@ struct dedupe_t
     }
 };
 
+/*!
+ * Transducer that removes consecutive duplicates from a sequence.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/dedupe.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 ZUG_INLINE_CONSTEXPR auto dedupe = comp(dedupe_t{});
 
 } // namespace zug

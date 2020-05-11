@@ -22,7 +22,20 @@ struct partition_by_tag
 {};
 
 /*!
- * Similar to clojure.core/partition-by$1
+ * Groups consecutive elements for which `mapping(x) == mapping(y)` in vectors.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/partition_by.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/partition_by.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename MappingT>
 auto partition_by(MappingT&& mapping)

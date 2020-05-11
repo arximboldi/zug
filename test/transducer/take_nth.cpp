@@ -19,7 +19,6 @@ using namespace zug;
 
 TEST_CASE("take_nth, into")
 {
-    using namespace std::placeholders;
     auto v = std::vector<int>{1, 2, 3, 4, 5};
 
     {
@@ -36,6 +35,15 @@ TEST_CASE("take_nth, into")
         auto res = into(std::vector<int>{}, take_nth(3), v);
         CHECK(res == (decltype(res){1, 4}));
     }
+}
+
+TEST_CASE("take_nth, example")
+{
+    // example1 {
+    auto v   = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto res = into_vector(take_nth(3), v);
+    CHECK(res == std::vector<int>{1, 4, 7, 10});
+    // }
 }
 
 TEST_CASE("take_nth, compose")

@@ -36,6 +36,15 @@ TEST_CASE("eager, sorted")
     CHECK(r == (decltype(r){6, 12, 24}));
 }
 
+TEST_CASE("eager, sorted example")
+{
+    // example1 {
+    auto v = std::vector<int>{6, 2, 1, 12, 3};
+    auto r = into_vector(sorted, v);
+    CHECK(r == (decltype(r){1, 2, 3, 6, 12}));
+    // }
+}
+
 TEST_CASE("eager, reversed")
 {
     auto v      = std::vector<int>{1, 2, 3, 6, 12};
@@ -45,6 +54,15 @@ TEST_CASE("eager, reversed")
     auto r =
         into(std::vector<int>{}, comp(map(times2), reversed, filter(div3)), v);
     CHECK(r == (decltype(r){24, 12, 6}));
+}
+
+TEST_CASE("eager, reversed example")
+{
+    // example2 {
+    auto v = std::vector<int>{1, 2, 3, 4, 5};
+    auto r = into_vector(reversed, v);
+    CHECK(r == (decltype(r){5, 4, 3, 2, 1}));
+    // }
 }
 
 TEST_CASE("eager, moves_data_around")

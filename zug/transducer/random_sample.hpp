@@ -13,8 +13,8 @@
 
 #include <random>
 
-#ifndef ABL_XFORM_DEFAULT_RANDOM_ENGINE
-#define ABL_XFORM_DEFAULT_RANDOM_ENGINE ::std::default_random_engine
+#ifndef ZUG_DEFAULT_RANDOM_ENGINE
+#define ZUG_DEFAULT_RANDOM_ENGINE ::std::default_random_engine
 #endif
 
 namespace zug {
@@ -23,7 +23,7 @@ namespace detail {
 
 struct default_generator
 {
-    using engine_t       = ABL_XFORM_DEFAULT_RANDOM_ENGINE;
+    using engine_t       = ZUG_DEFAULT_RANDOM_ENGINE;
     using distribution_t = std::uniform_real_distribution<>;
 
     engine_t engine             = engine_t{};
@@ -48,7 +48,19 @@ struct random_sampler
 } // namespace detail
 
 /*!
- * Similar to clojure.core/random-sample$1
+ * Given a random number generator `gen` and a probability `prob` let's elements
+ * through when `gen() <= prob`.
+ *
+ * Similar to
+ * [clojure.core/random-sample](https://clojuredocs.org/clojure.core/random-sample).
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/random_sample.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename ProbabilityT,
           typename GeneratorT = detail::default_generator>

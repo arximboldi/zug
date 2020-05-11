@@ -14,6 +14,18 @@
 
 namespace zug {
 
+/*!
+ * Transducer that removes all inputs that do not pass the `predicate`.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/filter.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+
+ */
 template <typename PredicateT>
 auto filter(PredicateT&& predicate)
 {

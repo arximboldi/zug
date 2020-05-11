@@ -59,10 +59,6 @@ auto apply_all_what_you_can_bitte(Fn&& fn, Tuple&& t, Tuples&&... ts)
 
 } // namespace detail
 
-/*!
- * Transducer that expands all unzipable inputs into the transducer. Unzipable
- * inputs are std::tuple<>, std::pair<> and std::array<>.
- */
 struct unzip_t
 {
     template <typename StepT>
@@ -76,6 +72,18 @@ struct unzip_t
     }
 };
 
+/*!
+ * Transducer that expands all unzipable inputs into the sequence. Unzipable
+ * inputs are `std::tuple`, `std::pair` and `std::array`.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/unzip.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 ZUG_INLINE_CONSTEXPR auto unzip = comp(unzip_t{});
 
 } // namespace zug

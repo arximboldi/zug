@@ -18,19 +18,21 @@
 
 namespace zug {
 
-/*!
- * Does nothing.
- */
+//! @defgroup util
+//! @{
+
 ZUG_INLINE_CONSTEXPR struct noop_t
 {
     template <typename... T>
     void operator()(T&&...) const
     {}
-} noop{};
-
+}
 /*!
- * Similar to clojure.core/identity
+ * Function object that takes any number of arguments and does nothing,
+ * returning @a void.
  */
+noop{};
+
 ZUG_INLINE_CONSTEXPR struct identity_t
 {
     template <typename T>
@@ -38,12 +40,12 @@ ZUG_INLINE_CONSTEXPR struct identity_t
     {
         return ZUG_FWD(x);
     };
-} identity{};
-
+}
 /*!
- * Similar to @a identity, but it never returns a reference
- * to the pased in value.
+ * Function object that returns the value that is passed to it.
  */
+identity{};
+
 ZUG_INLINE_CONSTEXPR struct identity__t
 {
     template <typename T>
@@ -51,11 +53,13 @@ ZUG_INLINE_CONSTEXPR struct identity__t
     {
         return ZUG_FWD(x);
     };
-} identity_{};
-
+}
 /*!
- * @see constantly
+ * Similar to @a identity, but it never returns a reference
+ * to the pased in value.
  */
+identity_{};
+
 template <typename T>
 struct constantly_t
 {
@@ -81,12 +85,14 @@ struct constantly_t
 };
 
 /*!
- * Similar to clojure.core/constantly
+ * Returns a function with no arguments that always returns the value @a value.
  */
 template <typename T>
 auto constantly(T&& value) -> constantly_t<std::decay_t<T>>
 {
     return constantly_t<std::decay_t<T>>{std::forward<T>(value)};
 }
+
+//! @}
 
 } // namespace zug

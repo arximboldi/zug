@@ -13,19 +13,21 @@
 
 namespace zug {
 
-/*!
- * Reducing function that produces the tuplification of the last
- * inputs it received.
- *
- * @see tuplify
- */
-ZUG_INLINE_CONSTEXPR struct last_t
+struct last_t
 {
     template <typename StateT, typename... InputTs>
     decltype(auto) operator()(StateT&&, InputTs&&... ins) const
     {
         return tuplify(ZUG_FWD(ins)...);
     }
-} last{};
+};
+
+/*!
+ * Reducing function that produces the tuplification of the last
+ * inputs it received.
+ *
+ * @see tuplify
+ */
+ZUG_INLINE_CONSTEXPR last_t last{};
 
 } // namespace zug

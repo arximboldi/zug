@@ -15,6 +15,17 @@
 
 namespace zug {
 
+/*!
+ * Lets items through until the predicate does not pass, then stops.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/take_while.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename PredicateT>
 constexpr auto take_while(PredicateT predicate)
 {

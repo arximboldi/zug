@@ -28,6 +28,9 @@ struct output_of_rf_t
 
 } // namespace detail
 
+//! @defgroup meta
+//! @{
+
 /*!
  * Metafunction that given a transducer @a `XformT` and some inputs @a
  * `InputTs`, returns the type of the outputs of the transducer, wrapped in a
@@ -72,5 +75,7 @@ struct result_of<XformT, meta::pack<InputTs...>>
 
 template <typename XformT, typename... InputTs>
 using result_of_t = typename result_of<XformT, InputTs...>::type;
+
+//! @}
 
 } // namespace zug

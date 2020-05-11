@@ -18,12 +18,8 @@ namespace zug {
 struct cycle_tag
 {};
 
-/*!
- * Generator transducer produces the sequence passed as parameter, by
- * cycling over it.
- */
 template <typename InputRangeT>
-constexpr auto cycle(InputRangeT range)
+constexpr auto cycle(InputRangeT&& range)
 {
     return comp([=](auto&& step) {
         return [=](auto&& s, auto&&... is) mutable {
@@ -49,11 +45,27 @@ constexpr auto cycle(InputRangeT range)
     });
 }
 
-template <typename InputRangeT, typename... InputRangeTs>
-constexpr auto cycle(InputRangeT&& r, InputRangeTs&&... rs)
+/*!
+ * Generator transducer produces the sequence passed as parameter, by
+ * cycling over it.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/cycle.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/cycle.cpp
+ *      :language: c++
+ *      :start-after: // example2
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
+template <typename... InputRangeTs>
+constexpr auto cycle(InputRangeTs&&... rs)
 {
-    return comp(cycle(std::forward<InputRangeT>(r)),
-                cycle(std::forward<InputRangeTs>(rs))...);
+    return comp(cycle(std::forward<InputRangeTs>(rs))...);
 }
 
 } // namespace zug

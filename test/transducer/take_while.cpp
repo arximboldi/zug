@@ -20,11 +20,12 @@ using namespace zug;
 TEST_CASE("take_while, into")
 {
     using namespace std::placeholders;
+    // example1 {
     auto v    = std::vector<int>{1, 2, 3, 4, 5};
     auto pred = std::bind(std::less<>{}, _1, 4);
-
-    auto res = into_vector(take_while(pred), v);
-    CHECK(res == (decltype(res){1, 2, 3}));
+    auto res  = into_vector(take_while(pred), v);
+    CHECK(res == decltype(res){1, 2, 3});
+    // }
 }
 
 namespace {

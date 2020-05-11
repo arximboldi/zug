@@ -20,6 +20,19 @@ namespace zug {
  *   $$init, init+step, ..., init+step*n$$
  *
  * It is inspired by Python's `itertools.count` generator.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/count.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/count.cpp
+ *      :language: c++
+ *      :start-after: // example2
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename InitT = std::size_t, typename DeltaT = InitT>
 constexpr auto count(InitT init = InitT{0}, DeltaT delta = DeltaT{1})
