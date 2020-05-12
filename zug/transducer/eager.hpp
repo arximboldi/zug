@@ -66,7 +66,7 @@ decltype(auto) state_wrapper_complete(eager_tag, T&& wrapper)
  *      :dedent: 4
  * @endrst
  */
-constexpr auto sorted = eager([](auto&& range) -> decltype(auto) {
+auto sorted = eager([](auto&& range) -> decltype(auto) {
     std::sort(range.begin(), range.end());
     return ZUG_FWD(range);
 });
@@ -81,7 +81,7 @@ constexpr auto sorted = eager([](auto&& range) -> decltype(auto) {
  *      :dedent: 4
  * @endrst
  */
-constexpr auto reversed = eager([](auto&& range) -> decltype(auto) {
+auto reversed = eager([](auto&& range) -> decltype(auto) {
     return detail::make_iterator_range(range.rbegin(), range.rend());
 });
 
