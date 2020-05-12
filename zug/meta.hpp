@@ -32,9 +32,9 @@ struct output_of_rf_t
 //! @{
 
 /*!
- * Metafunction that given a transducer @a `XformT` and some inputs @a
- * `InputTs`, returns the type of the outputs of the transducer, wrapped in a
- * `meta::pack`.  It preserves reference types.
+ * Metafunction that given a transducer `XformT` and some inputs `InputTs`,
+ * returns the type of the outputs of the transducer, wrapped in a `meta::pack`.
+ * It preserves reference types.
  */
 template <typename XformT, typename... InputTs>
 struct output_of
@@ -54,11 +54,9 @@ template <typename XformT, typename... InputTs>
 using output_of_t = typename output_of<XformT, InputTs...>::type;
 
 /*!
- * Metafunction that given a transducer @a `XformT` and some inputs @a
- * `InputTs`, returns the type of the output of the transducer, combined as
- * combined in a single result with `tuplify`.
- *
- * @see tuplify
+ * Metafunction that given a transducer `XformT` and some inputs `InputTs`,
+ * returns the type of the output of the transducer, combined as combined in a
+ * single result with `tuplify`.
  */
 template <typename XformT, typename... InputTs>
 struct result_of

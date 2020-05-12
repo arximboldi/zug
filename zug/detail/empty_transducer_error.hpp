@@ -21,10 +21,6 @@ namespace detail {
  *
  * @note This is kept in `detail` because we want to explore alternative designs
  *       that do not require skipping.
- *
- * @see  skip
- *
- * @todo Explore alternative design.
  */
 struct empty_transducer_error : std::runtime_error
 {

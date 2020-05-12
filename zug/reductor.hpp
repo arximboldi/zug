@@ -14,10 +14,8 @@
 namespace zug {
 
 /*!
- * Common reductor interface.  This is an abstract type, use
- * `reductor` and `empty_reductor` concrete types.
- *
- * @see reductor, empty_reductor
+ * Common reductor interface.  This is an abstract type, use `reductor` and
+ * `empty_reductor` concrete types.
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 struct reductor_base
@@ -49,7 +47,7 @@ struct reductor_base
     complete_type current() && { return state_unwrap_all(std::move(state_)); }
 
     /*!
-     * Changes the current visible state of the reduction to be the value @a x;
+     * Changes the current visible state of the reduction to be the value `x`;
      */
     template <typename T>
     void current(T&& x)
@@ -58,8 +56,8 @@ struct reductor_base
     }
 
     /*!
-     * Evaluates the next step of the reduction, passing the inputs @a
-     * `ins` to the reducing function.
+     * Evaluates the next step of the reduction, passing the inputs `ins` to the
+     * reducing function.
      *
      * @note When operated on a `const` object, the it returns a new
      *       reductor object.  Otherwise, the operation is performed
@@ -104,20 +102,18 @@ private:
 //! @{
 
 /*!
- * Function object that performs a reduction using a reducing function
- * of type `ReducingFnT`, an initial state of type of type
- * `InitialStateT` and inputs of types `InputTs...`.
+ * Function object that performs a reduction using a reducing function of type
+ * `ReducingFnT`, an initial state of type of type `InitialStateT` and inputs of
+ * types `InputTs...`.
  *
- * The function object can be called with arguments converibles to
- * `InputTs...` to step the reduction.  If the reductor object is
- * `const`, it will return a new value representing the advanced
- * state.  Otherwise it performs the reduction in place and returns a
- * reference to itself. See @a `reductor_base` for details on the
- * interface.
+ * The function object can be called with arguments converibles to `InputTs...`
+ * to step the reduction.  If the reductor object is `const`, it will return a
+ * new value representing the advanced state.  Otherwise it performs the
+ * reduction in place and returns a reference to itself. See `reductor_base` for
+ * details on the interface.
  *
- * This object requires an initial input to be pased to the
- * constructor.  If no input is available at construction time, use @a
- * `empty_reductor` instead.
+ * This object requires an initial input to be pased to the constructor.  If no
+ * input is available at construction time, use `empty_reductor` instead.
  */
 template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
 struct reductor
@@ -141,7 +137,7 @@ struct reductor
 };
 
 /*!
- * Constructs a @a `reductor` object with deduced argument types.
+ * Constructs a `reductor` object with deduced argument types.
  */
 template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
 auto make_reductor(ReducingFnT&& step, InitialStateT&& state, InputTs&&... ins)
@@ -176,11 +172,8 @@ struct caller
 //! @{
 
 /*!
- * Reductor object that does not require inputs to be fed at
- * construction time.  In some cases though, @a `reductor` can perform
- * better.
- *
- * @see reductor, reductor_base
+ * Reductor object that does not require inputs to be fed at construction time.
+ * In some cases though, `reductor` can perform better.
  */
 template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
 struct empty_reductor
@@ -202,18 +195,10 @@ struct empty_reductor
     {}
 };
 
-template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
-struct empty_reductor<ReducingFnT, InitialStateT, meta::pack<InputTs...>>
-    : empty_reductor<ReducingFnT, InitialStateT, InputTs...>
-{
-    using empty_reductor<ReducingFnT, InitialStateT, InputTs...>::
-        empty_reductor;
-};
-
 /*!
- * Constructs an @a `empty_reductor` object with deduced argument
- * types.  The `InputTs` over which the reductor functions have to be
- * passed explicitly though.
+ * Constructs an `empty_reductor` object with deduced argument types.  The
+ * `InputTs` over which the reductor functions have to be passed explicitly
+ * though.
  */
 template <typename... InputTs, typename ReducingFnT, typename InitialStateT>
 auto make_empty_reductor(ReducingFnT&& step, InitialStateT&& state)
@@ -226,5 +211,13 @@ auto make_empty_reductor(ReducingFnT&& step, InitialStateT&& state)
 }
 
 //! @}
+
+template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
+struct empty_reductor<ReducingFnT, InitialStateT, meta::pack<InputTs...>>
+    : empty_reductor<ReducingFnT, InitialStateT, InputTs...>
+{
+    using empty_reductor<ReducingFnT, InitialStateT, InputTs...>::
+        empty_reductor;
+};
 
 } // namespace zug

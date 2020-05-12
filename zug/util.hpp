@@ -29,7 +29,7 @@ ZUG_INLINE_CONSTEXPR struct noop_t
 }
 /*!
  * Function object that takes any number of arguments and does nothing,
- * returning @a void.
+ * returning `void`.
  */
 noop{};
 
@@ -55,7 +55,7 @@ ZUG_INLINE_CONSTEXPR struct identity__t
     };
 }
 /*!
- * Similar to @a identity, but it never returns a reference
+ * Similar to `identity`, but it never returns a reference
  * to the pased in value.
  */
 identity_{};
@@ -85,7 +85,7 @@ struct constantly_t
 };
 
 /*!
- * Returns a function with no arguments that always returns the value @a value.
+ * Returns a function with no arguments that always returns the `value`.
  */
 template <typename T>
 auto constantly(T&& value) -> constantly_t<std::decay_t<T>>

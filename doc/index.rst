@@ -15,6 +15,7 @@ Contents
    reducing
    processes
    type-erasure
+   state
 
 .. toctree::
    :caption: Extras

@@ -13,21 +13,20 @@
 
 namespace zug {
 
+//! @defgroup state_traits
+//! @{
+
 /*!
  * Interface for a type specializing the `State` concept.
  *
  * A `State` is the first parameter of a reducing function, also known as the
- * accumulator.  Every type is a model of `State`, with the following
- * default implementation. However, one might want to specialize the
- * state it for a particular accumulator type, such that transducers
- * can operate with it.  A transducer should not make assumptions
- * about the state it receives, instead, it can only wrap it using
- * `wrap_state` to attach additional data.
+ * accumulator.  Every type is a model of `State`, with the following default
+ * implementation. However, one might want to specialize the state it for a
+ * particular accumulator type, such that transducers can operate with it.  A
+ * transducer should not make assumptions about the state it receives, instead,
+ * it can only wrap it using `wrap_state` to attach additional data.
  *
  * For an example of a stateful reducing function, see `take`.
- *
- * @see wrap_state
- * @see take
  */
 template <typename StateT>
 struct state_traits
@@ -148,5 +147,7 @@ decltype(auto) state_rewrap(T&& s, U&& x)
 {
     return state_traits_t<T>::rewrap(std::forward<T>(s), std::forward<U>(x));
 }
+
+//! @}
 
 } // namespace zug

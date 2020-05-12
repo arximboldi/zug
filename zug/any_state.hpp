@@ -20,6 +20,9 @@
 
 namespace zug {
 
+//! @defgroup any_state
+//! @{
+
 /*!
  * Polymorphically holds any value implementing the `state_traits`.
  * This type is used for the implementation of `transducer`.
@@ -307,5 +310,7 @@ struct state_traits<any_state>
                                            : std::forward<D>(d)();
     }
 };
+
+//! @}
 
 } // namespace zug

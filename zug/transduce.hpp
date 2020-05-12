@@ -13,7 +13,11 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/transduce
+ * Similar to
+ * [clojure.core/transduce](https://clojuredocs.org/clojure.core/transduce).
+ *
+ * Given a transducer `xform`, this is equivalent to: `reduce(xform(step),
+ * state, ranges...)`
  */
 template <typename XformT,
           typename ReducingFnT,

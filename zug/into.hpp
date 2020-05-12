@@ -19,10 +19,14 @@
 
 namespace zug {
 
-/*!
- * Similar to clojure.core/into$4
- */
 #if ZUG_STATEFUL_INTO
+/*!
+ * Transduces the input `ranges` using `xform`, storing the results in the
+ * collection `col`, which is also returned.
+ *
+ * The results are stored in `col` using `push_back()`. If transducer has
+ * multiple output arguments, they are combined in a `std::tuple`.
+ */
 template <typename CollectionT, typename XformT, typename... InputRangeTs>
 auto into(CollectionT&& col, XformT&& xform, InputRangeTs&&... ranges)
     -> CollectionT&&

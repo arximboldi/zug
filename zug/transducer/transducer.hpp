@@ -96,7 +96,8 @@ struct get_reducing_fn
  * @endcode
  *
  * A second template argument can be passed to indicate the type of data after
- * running through the transducer.  By default, it's the same as the input.
+ * running through the transducer.  By default, as in the previous example, it's
+ * the same as the input, but it does not have to be:
  *
  * @code{.cpp}
  * transducer<int, std::string> serialize = map([] (int x) {
@@ -104,37 +105,60 @@ struct get_reducing_fn
  * });
  * @endcode
  *
- * Both the first or second template arguments can take a `meta::pack<>` when it
- * can take or pass more than one input type.
+ * Note that, both the first or second template arguments can take a
+ * `meta::pack` when it can take or pass more than one input type.
  *
  * @code{.cpp}
- * transducer<pack<int, int>, float> serialize = map([] (int a, int b) {
- *     return float(a) / float(b);
+ * transducer<pack<int, int>, std::tuple<int, int>> xf1 = zip;
+ * transducer<std::tuple<int, int>, pack<int, int>> xf2 = unzip;
+ * transducer<pack<int, int>, float> xf3 = map([] (int a, int b) {
+ *     return float(a) / b;
  * });
  * @endcode
  *
- * @note Type erased transducers have a performance cost.  Not only is it slower
- *       to pass them around, they are significantly slower when processing the
- *       sequence.  For such, use them when really needed, and otherwise use
- *       `auto` and templates to avoid erasing the types of the transducers.
+ * Like any other transducer, a type erased one can be composed with other
+ * transducers that have compatible signatures:
  *
- * @note A type erased transducer actually defers applying the held transducer
- *       until it first runs through a sequence, as ilustrated by this example:
+ * @code{.cpp}
+ * auto x1 = transducer<int>{...};
+ * auto x2 = transducer<int, pack<float, std::string>>{...};
+ * auto x3 = x1 | x2 | map([] (float x, std::string s) {
+ *     return std::to_string(x) + s;
+ * });
+ * // Note that the result of composing type erased transducers is not a type
+ * // erased one.  We can however still type erase the result:
+ * auto x4 = transducer<int, std::string>{x3};
+ * @endcode
  *
- *       @code{.cpp}
+ * @rst
+ *
+ * .. warning:: Type erased transducers do have a performance cost.  Not only is
+ *    it slower to pass them around, they are significantly slower during
+ *    processing of the sequence.  For such, use them only when really needed,
+ *    and otherwise use `auto` and templates to avoid erasing the types of the
+ *    transducers.
+ *
+ * .. note:: A type erased transducer actually defers applying the held
+ *    transducer until it first runs through a sequence, as ilustrated by this
+ *    example:
+ *
+ *    .. code-block:: c++
+ *
  *       transducer<int> filter_odd = [](auto step) {
  *           std::cout << "Building step" << std::endl;
  *           return [](auto st, int x) {
  *               return x % 2 ? step(st, x) : st;
  *           };
  *       };
- *
  *       // Doesn't print anything
  *       auto step = filter_odd(std::plus<>{});
- *
  *       // Now it prints
  *       auto sum = reduce(step, 0, {1, 2, 3})
- *       @endcode
+ *
+ *    This should normally have no implications. All transducers in the
+ *    library perform no side effects when applying a *reducing function*.
+ *
+ * @endrst
  */
 template <typename InputT = meta::pack<>, typename OutputT = InputT>
 class transducer : detail::pipeable

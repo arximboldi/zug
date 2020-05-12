@@ -21,8 +21,8 @@ struct run_state_t
 } // namespace detail
 
 /*!
- * Runs a transducer composed with no significant reduction. It is
- * useful to execute a transducer for which we are only interested on
+ * Runs a transducer composed with no significant reduction over zero of more
+ * ranges. It is useful to execute a transducer when we are only interested on
  * its side effects.
  */
 template <typename XformT, typename... InputRangeTs>

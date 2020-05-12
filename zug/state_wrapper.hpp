@@ -14,9 +14,11 @@
 
 namespace zug {
 
+//! @defgroup state_wrapper
+//! @{
+
 /*!
  * Default tag for `state_wrapper`.
- * @see state_wrapper
  */
 struct no_tag
 {};
@@ -41,10 +43,7 @@ struct no_tag
  * @tparam DataT is the additional data that the transducer wants to
  *        attach to represent its own state.
  *
- * For an example of a stateful reducing function, @see take
- *
- * @see wrap_state
- * @see state_traits
+ * For an example of a stateful reducing function, see take.
  */
 template <typename TagT = no_tag, typename StateT = void, typename DataT = void>
 struct state_wrapper : std::tuple<StateT, DataT>
@@ -78,8 +77,6 @@ struct is_state_wrapper<_, state_wrapper<T, S, D>> : std::true_type
 /*!
  * Given a tag `TagT` and a state `next` and associated `data`,
  * returns a `state_wrapper` instance.
- *
- * @see state_wrapper
  */
 template <typename TagT = no_tag, typename StateT, typename DataT = TagT>
 auto wrap_state(StateT&& next, DataT&& data = DataT{})
@@ -92,9 +89,6 @@ auto wrap_state(StateT&& next, DataT&& data = DataT{})
 /*!
  * Utility function for easy overloading of `state_traits::unwrap`
  * for state wrappers with a specific tag.
- *
- * @see state_wrapper
- * @see state_traits::unwrap
  */
 template <typename TagT, typename T>
 decltype(auto) state_wrapper_unwrap(TagT, T&& s)
@@ -105,9 +99,6 @@ decltype(auto) state_wrapper_unwrap(TagT, T&& s)
 /*!
  * Utility function for easy overloading of `state_traits::complete`
  * for state wrappers with a specific tag.
- *
- * @see state_wrapper
- * @see state_traits::complete
  */
 template <typename TagT, typename T>
 decltype(auto) state_wrapper_complete(TagT, T&& s)
@@ -118,9 +109,6 @@ decltype(auto) state_wrapper_complete(TagT, T&& s)
 /*!
  * Utility function for easy overloading of `state_traits::unwrap_all`
  * for state wrappers with a specific tag.
- *
- * @see state_wrapper
- * @see state_traits::unwrap_all
  */
 template <typename TagT, typename T>
 decltype(auto) state_wrapper_unwrap_all(TagT, T&& s)
@@ -131,9 +119,6 @@ decltype(auto) state_wrapper_unwrap_all(TagT, T&& s)
 /*!
  * Utility function for easy overloading of `state_traits::rewrap`
  * for state wrappers with a specific tag.
- *
- * @see state_wrapper
- * @see state_traits::rewrap
  */
 template <typename TagT, typename T, typename U>
 decltype(auto) state_wrapper_rewrap(TagT, T&& s, U&& x)
@@ -145,9 +130,6 @@ decltype(auto) state_wrapper_rewrap(TagT, T&& s, U&& x)
 /*!
  * Utility function for easy overloading of `state_traits::data`
  * for state wrappers with a specific tag.
- *
- * @see state_wrapper
- * @see state_traits::data
  */
 template <typename TagT, typename T, typename D>
 decltype(auto) state_wrapper_data(TagT tag, T&& s, D&&)
@@ -172,8 +154,6 @@ decltype(auto) state_wrapper_data(TagT, T&& s)
  * Utility function that returns whether the `DataT` associated with a
  * state wrapper with tag `TagT` is reduced -- i.e. idempotent.
  * Can be overloaded custom tags.
- *
- * @see state_traits::reduced
  */
 template <typename TagT, typename DataT>
 bool state_wrapper_data_is_reduced(TagT, DataT&&)
@@ -185,10 +165,6 @@ bool state_wrapper_data_is_reduced(TagT, DataT&&)
  * Utility function for easy overloading of `state_traits::is_reduced`
  * for state wrappers with a specific tag.  Most of the time you may
  * want to overload `state_wrapper_is_reduced` instead.
- *
- * @see state_wrapper_data_is_reduced
- * @see state_wrapper
- * @see state_traits::is_reduced
  */
 template <typename TagT, typename T>
 bool state_wrapper_is_reduced(TagT tag, T&& s)
@@ -199,17 +175,8 @@ bool state_wrapper_is_reduced(TagT tag, T&& s)
 }
 
 /*!
- * State traits specialization for `state_wrapper`.  Just forwards to
- * the `state_wrapper_*` methods, that are easier to specialize for a
- * given tag.
- *
- * @see state_wrapper_complete
- * @see state_wrapper_is_reduced
- * @see state_wrapper_unwrap
- * @see state_wrapper_data
- * @see state_wrapper_unwrap_all
- * @see state_wrapper_rewrap
- * @see state_wrapper
+ * State traits specialization for `state_wrapper`.  Just forwards to the
+ * `state_wrapper_*` methods, that are easier to specialize for a given tag.
  */
 template <typename TagT, typename StateT, typename DataT>
 struct state_traits<state_wrapper<TagT, StateT, DataT>>
@@ -252,5 +219,7 @@ struct state_traits<state_wrapper<TagT, StateT, DataT>>
             TagT{}, std::forward<T>(s), std::forward<U>(x));
     }
 };
+
+//! @}
 
 } // namespace zug
