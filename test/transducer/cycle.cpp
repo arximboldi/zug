@@ -17,24 +17,26 @@ using namespace zug;
 
 TEST_CASE("cycle, generator")
 {
-    using tup = std::tuple<int, int>;
-    auto v1   = std::vector<int>{13, 42, 5, 6, 15};
-    auto v2   = std::vector<int>{0, 1};
-    auto res  = into_vector(cycle(v2), v1);
-    CHECK(res ==
-          (decltype(res){
-              tup(13, 0), tup(42, 1), tup(5, 0), tup(6, 1), tup(15, 0)}));
+    // example1 {
+    auto v1 = std::vector<int>{13, 42, 5, 6, 15};
+    auto v2 = std::vector<int>{0, 1};
+    auto r  = into_vector(cycle(v2), v1);
+    using t = std::vector<std::tuple<int, int>>;
+    CHECK(r == (t{{13, 0}, {42, 1}, {5, 0}, {6, 1}, {15, 0}}));
+    // }
 }
 
 TEST_CASE("cycle, variadic")
 {
-    using tup = std::tuple<int, std::string>;
-    auto v1   = std::vector<int>{0, 1};
-    auto v2   = std::vector<std::string>{"one", "two", "three"};
-    auto res  = into_vector(comp(cycle(v1, v2), take(5)));
-    CHECK(res == (decltype(res){tup(0, "one"),
-                                tup(1, "two"),
-                                tup(0, "three"),
-                                tup(1, "one"),
-                                tup(0, "two")}));
+    // example2 {
+    auto v1 = std::vector<int>{0, 1};
+    auto v2 = std::vector<std::string>{"one", "two", "three"};
+    auto r  = into_vector(cycle(v1, v2) | take(5));
+    using t = std::vector<std::tuple<int, std::string>>;
+    CHECK(r == (t{{0, "one"}, //
+                  {1, "two"},
+                  {0, "three"},
+                  {1, "one"},
+                  {0, "two"}}));
+    // }
 }

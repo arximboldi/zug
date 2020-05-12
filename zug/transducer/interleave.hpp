@@ -51,6 +51,17 @@ struct interleave_t
     }
 };
 
+/*!
+ * Feed every argument of each element individually into the stream.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/interleave.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 ZUG_INLINE_CONSTEXPR auto interleave = comp(interleave_t{});
 
 } // namespace zug

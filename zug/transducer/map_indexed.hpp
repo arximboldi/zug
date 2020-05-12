@@ -15,7 +15,15 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/map-indexed$1
+ * Equivalent to `count() | map(mapping)`.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/map_indexed.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename MappingT>
 constexpr auto map_indexed(MappingT&& mapping)

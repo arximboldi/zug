@@ -40,7 +40,20 @@ struct lookup_or_key
 } // namespace detail
 
 /*!
- * Similar to clojure.core/replace$1
+ * Transducer that replaces elements by those in the `table`, a mapping
+ * providing a `find()` method returning an iterator comparable with `end()`.
+ * If an input is not found, it is left untouched in the sequence.
+ *
+ * Similar to
+ * [clojure.core/replace](https://clojuredocs.org/clojure.core/replace).
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/replace.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename TableT>
 auto replace(TableT&& table)
@@ -49,7 +62,15 @@ auto replace(TableT&& table)
 }
 
 /*!
- * Transducer that replaces all elements by `table[tuplify(inputs)]`
+ * Transducer that replaces all elements by `table[tuplify(inputs)]`.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/replace.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename TableT>
 auto replace_all(TableT table)
@@ -60,6 +81,19 @@ auto replace_all(TableT table)
 
 /*!
  * Transducer that replaces all elements by `table.at(tuplify(inputs))`
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/replace.cpp
+ *      :language: c++
+ *      :start-after: // example3 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/replace.cpp
+ *      :language: c++
+ *      :start-after: // example4 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename TableT>
 auto replace_all_safe(TableT&& table)

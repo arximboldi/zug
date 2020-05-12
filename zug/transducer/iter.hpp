@@ -18,10 +18,6 @@ namespace zug {
 struct iter_tag
 {};
 
-/*!
- * Generator transducer produces the sequence passed as parameter, by
- * iterating over it.
- */
 template <typename InputRangeT>
 auto iter(InputRangeT&& range)
 {
@@ -59,6 +55,24 @@ bool state_wrapper_data_is_reduced(iter_tag, T&& iters)
 
 auto iter() { return identity_; }
 
+/*!
+ * Generator transducer produces the sequence passed as parameter, by
+ * iterating over it.
+ *
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/iter.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/iter.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename InputRangeT, typename... InputRangeTs>
 constexpr auto iter(InputRangeT&& r, InputRangeTs&&... rs)
 {

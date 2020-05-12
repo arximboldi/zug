@@ -33,7 +33,7 @@ auto readbuf(InputStreamT& stream, MkBuf make_buffer)
                 step(state_unwrap(ZUG_FWD(s)),
                      ZUG_FWD(is)...,
                      detail::make_iterator_range(data, data + stream.gcount())),
-                !stream);
+                stream.eof());
         };
     });
 }
@@ -44,6 +44,14 @@ auto readbuf(InputStreamT& stream, MkBuf make_buffer)
  * Generator transducer that reads buffers of size `N` from @a
  * `stream`, and passes them into the sequence.  It passes them into
  * the sequence as an range with `char*` iterators.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/readbuf.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <std::size_t N, typename InputStreamT>
 auto readbuf(InputStreamT& stream)
@@ -53,6 +61,14 @@ auto readbuf(InputStreamT& stream)
 
 /*!
  * Like `readbuf(stream)` but with runtime specified size.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/readbuf.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename InputStreamT>
 auto readbuf(InputStreamT& stream, std::size_t n)

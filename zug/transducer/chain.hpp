@@ -22,10 +22,6 @@ namespace zug {
 struct chainr_tag
 {};
 
-/*!
- * Transducer produces the sequence passed as parameter after all
- * other input has finished.
- */
 template <typename InputRange>
 auto chainr(InputRange range)
 {
@@ -40,16 +36,32 @@ auto chainr(InputRange range)
     });
 }
 
+/*!
+ * Transducer produces the sequence passed as parameter _after_ all other input
+ * has finished.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example22 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename... InputRangeTs>
 auto chainr(InputRangeTs... rs)
 {
     return comp(chainr(std::forward<InputRangeTs>(rs))...);
-}
-
-template <typename... InputRangeTs>
-auto chain(InputRangeTs&&... rs)
-{
-    return chainr(std::forward<InputRangeTs>(rs)...);
 }
 
 template <typename T>
@@ -61,10 +73,6 @@ decltype(auto) state_wrapper_complete(chainr_tag, T&& wrapper)
                       *state_wrapper_data(std::forward<T>(wrapper)).second)));
 }
 
-/*!
- * Transducer produces the sequence passed as parameter before
- * processing the first input.
- */
 template <typename InputRange>
 auto chainl(InputRange range)
 {
@@ -90,10 +98,41 @@ auto chainl(InputRange range)
     });
 }
 
+/*!
+ * Transducer produces the sequence passed as parameter _before_ processing the
+ * first input.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example3 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example4 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/chain.cpp
+ *      :language: c++
+ *      :start-after: // example5 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 template <typename... InputRangeTs>
 auto chainl(InputRangeTs... rs)
 {
     return comp(chainl(std::forward<InputRangeTs>(rs))...);
+}
+
+/*!
+ * Alias for `chainr`.
+ */
+template <typename... InputRangeTs>
+auto chain(InputRangeTs&&... rs)
+{
+    return chainr(std::forward<InputRangeTs>(rs)...);
 }
 
 } // namespace zug

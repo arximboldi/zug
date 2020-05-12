@@ -17,7 +17,16 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/drop-while$1
+ * Skips every element that passes the predicate, until one element passes it
+ * it. From then on it lets everything go through.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/drop_while.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename PredicateT>
 constexpr auto drop_while(PredicateT&& predicate)

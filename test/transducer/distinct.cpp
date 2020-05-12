@@ -17,9 +17,11 @@ using namespace zug;
 
 TEST_CASE("distinct, into")
 {
+    // example1 {
     auto v   = std::vector<int>{1, 2, 1, 3, 2, 1};
     auto res = into_vector(distinct, v);
     CHECK(res == (decltype(res){1, 2, 3}));
+    // }
 }
 
 TEST_CASE("distinct, variadic")

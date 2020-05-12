@@ -9,6 +9,7 @@
 #include <catch2/catch.hpp>
 
 #include <zug/into.hpp>
+#include <zug/into_vector.hpp>
 #include <zug/reducing/first.hpp>
 #include <zug/transducer/cat.hpp>
 #include <zug/transducer/partition.hpp>
@@ -19,20 +20,22 @@
 
 using namespace zug;
 
+TEST_CASE("partition, partition flushing")
+{
+    // example1 {
+    auto v  = std::vector<int>{1, 2, 3, 4, 5, 6, 7};
+    auto r  = into_vector(partition(2u), v);
+    using t = std::vector<std::vector<int>>;
+    CHECK(r == t{{1, 2}, {3, 4}, {5, 6}, {7}});
+    // }
+}
+
 TEST_CASE("partition, partition")
 {
     auto v = std::vector<int>{1, 2, 3, 4, 5, 6};
 
     auto res = into(std::vector<std::vector<int>>{}, partition(2u), v);
     CHECK(res == (std::vector<std::vector<int>>{{1, 2}, {3, 4}, {5, 6}}));
-}
-
-TEST_CASE("partition, partition flushing")
-{
-    auto v = std::vector<int>{1, 2, 3, 4, 5};
-
-    auto res = into(std::vector<std::vector<int>>{}, partition(2u), v);
-    CHECK(res == (std::vector<std::vector<int>>{{1, 2}, {3, 4}, {5}}));
 }
 
 namespace {

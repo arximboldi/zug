@@ -8,6 +8,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zug/into_vector.hpp>
 #include <zug/reducing/last.hpp>
 #include <zug/transduce.hpp>
 #include <zug/transducer/map.hpp>
@@ -23,6 +24,15 @@ TEST_CASE("unzip, minimal")
     auto r = unzip(map([](auto a, auto b) { return a + b; })(last))(
         0, std::make_tuple(13, 42));
     CHECK(r == 55);
+}
+
+TEST_CASE("unzip, example")
+{
+    // example1 {
+    auto v = std::vector<std::tuple<int, int>>{{1, 10}, {2, 20}, {3, 30}};
+    auto r = into_vector(unzip | map(std::plus<>{}), v);
+    CHECK(r == std::vector<int>{11, 22, 33});
+    // }
 }
 
 TEST_CASE("unzip, unzip transducer")
@@ -48,16 +58,16 @@ TEST_CASE("unzip, unzip transducer variadic multitype")
     auto v3 = std::vector<tup2>{{tup2('a'), tup2('b'), tup2('c')}};
     auto v4 = std::vector<arr>{{arr{{1, 2}}, arr{{3, 4}}, arr{{5, 6}}}};
 
-    auto res =
-        transduce(unzip,
-                  [](double x, int y, double z, short v, char w, int a, int b) {
-                      return x + y + z + v + w + a + b;
-                  },
-                  1.0,
-                  v1,
-                  v2,
-                  v3,
-                  v4);
+    auto res = transduce(
+        unzip,
+        [](double x, int y, double z, short v, char w, int a, int b) {
+            return x + y + z + v + w + a + b;
+        },
+        1.0,
+        v1,
+        v2,
+        v3,
+        v4);
 
     CHECK_THAT(res, Catch::Matchers::WithinAbs(388.6, 0.001));
 }

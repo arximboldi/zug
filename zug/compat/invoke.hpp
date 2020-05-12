@@ -46,7 +46,9 @@ inline auto do_invoke(PMF pmf, Pointer&& ptr, Args&&... args)
  * Like C++17 `std::invoke`
  */
 template <class F, class... ArgTypes>
-decltype(auto) invoke(F&& f, ArgTypes&&... args)
+auto invoke(F&& f, ArgTypes&&... args)
+    -> decltype(detail::do_invoke(std::forward<F>(f),
+                                  std::forward<ArgTypes>(args)...))
 {
     return detail::do_invoke(std::forward<F>(f),
                              std::forward<ArgTypes>(args)...);

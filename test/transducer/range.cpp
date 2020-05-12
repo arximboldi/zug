@@ -18,20 +18,35 @@ using namespace zug;
 
 TEST_CASE("range, stop")
 {
+    // example1 {
     auto res = into_vector(range(3));
-    CHECK(res == (std::vector<std::size_t>{{0, 1, 2}}));
+    CHECK(res == std::vector<std::size_t>{{0, 1, 2}});
+    // }
 }
 
 TEST_CASE("range, start stop")
 {
+    // example2 {
     auto res = into_vector(range(2, 6));
-    CHECK(res == (std::vector<int>{{2, 3, 4, 5}}));
+    CHECK(res == std::vector<int>{2, 3, 4, 5});
+    // }
 }
 
 TEST_CASE("range, start stop step")
 {
+    // example3 {
     auto res = into_vector(range(2, 6, 2));
-    CHECK(res == (std::vector<int>{{2, 4}}));
+    CHECK(res == std::vector<int>{2, 4});
+    // }
+}
+
+TEST_CASE("range, paralleld")
+{
+    // example4 {
+    auto s   = std::string{"hello"};
+    auto res = into_vector(range(2, 6, 2), s);
+    CHECK(res == std::vector<std::tuple<char, int>>{{'h', 2}, {'e', 4}});
+    // }
 }
 
 TEST_CASE("range, start stop step floating_point")

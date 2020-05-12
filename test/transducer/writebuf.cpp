@@ -27,8 +27,10 @@ TEST_CASE("writebuf, writebuf partitions")
 
 TEST_CASE("writebuf, writebuf strings")
 {
+    // example1 {
     auto v      = std::vector<std::string>{"123", "4", "56"};
     auto stream = std::stringstream{};
     run(writebuf(stream), v);
     CHECK(stream.str() == "123456");
+    // }
 }

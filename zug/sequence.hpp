@@ -45,8 +45,7 @@ struct sequence_data
     };
 
     using reductor_t =
-        empty_reductor_fn<std::decay_t<std::result_of_t<XformT(step_t)>>,
-                          state_t>;
+        empty_reductor<std::decay_t<std::result_of_t<XformT(step_t)>>, state_t>;
 
     sequence_data(const XformT& xform)
         : impl_{std::size_t{}, cache_t{}, reductor_t{xform(step_t{}), this}}
@@ -130,24 +129,30 @@ private:
 
 } // namespace detail
 
+//! @defgroup sequence
+//! @{
+
 /*!
  * Range adaptor that transduces the ranges in `RangeTs` with the
  * transducer `XformT`, producing values of `ValueT`.  It also works
  * with no range, as a generator.
  *
- * @note There is no shared data between the range iterators excepting
- *       the adapted ranges, for which a const reference is kept.
- *       This means that it is safe to copy the iterators around and
- *       use them from different threads.  It is also safe to use the
- *       iterators after the parent `sequence_range` is destroyed, but
- *       the adapted ranges should still be kept alive.
+ * @rst
  *
- * @note The transducer is processed every time for each iterator.
- *       Thus, any side effects the transducer might cause will be
- *       produced whenever we run on each iterator of the range.
+ * .. tip:: The transducer is processed lazily.  It is ok to adapt
+ *    infinite ranges or infinite generators!
  *
- * @note The transducer is processed lazily.  It is ok to adapt
- *       infinite ranges or infinite generators.
+ * .. note:: There is no shared data between the range iterators excepting the
+ *    adapted ranges, for which a const reference is kept.  This means that it
+ *    is safe to copy the iterators around and use them from different threads.
+ *    It is also safe to use the iterators after the parent `sequence_range` is
+ *    destroyed, but the adapted ranges should still be kept alive.
+ *
+ * .. warning:: The transducer is processed every time for each iterator.  Thus,
+ *    any side effects the transducer might cause will be produced whenever we
+ *    run on each iterator of the range.
+ *
+ * @endrst
  */
 template <typename ValueT, typename XformT, typename... RangeTs>
 struct sequence_range
@@ -193,16 +198,20 @@ private:
     xform_t xform_;
 };
 
+//! @}
+
 namespace detail {
 struct deduce_value_type
 {};
 } // namespace detail
 
+//! @defgroup sequence
+//! @{
+
 /*!
- * Factory for `sequence_range` values producing an iterable range out
- * of a transducer, in the spirit of clojure.core/sequence$2
- *
- * @see sequence_range
+ * Returns a `sequence_range` values producing an iterable range out of a
+ * transducer, in the spirit of
+ * [clojure.core/sequence](https://clojuredocs.org/clojure.core/sequence)
  */
 template <typename ValueT = detail::deduce_value_type,
           typename XformT,
@@ -217,5 +226,7 @@ auto sequence(XformT&& xform, const RangeTs&... ranges)
 {
     return {std::forward<XformT>(xform), ranges...};
 }
+
+//! @}
 
 } // namespace zug

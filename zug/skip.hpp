@@ -29,11 +29,12 @@
 
 namespace zug {
 
+//! @defgroup skip
+//! @{
+
 /*!
- * Type-safe union type that can hold values of both @a SkippedT and
- * @a CalledT types.
- *
- * @see skip
+ * Type-safe union type that can hold values of both `SkippedT` and `CalledT`
+ * types.
  */
 template <typename SkippedT, typename CalledT>
 struct skip_state : ZUG_VARIANT<SkippedT, CalledT>
@@ -106,6 +107,8 @@ struct state_traits<skip_state<SkippedT, CalledT>>
     }
 };
 
+//! @}
+
 namespace detail {
 
 template <typename ReducingFnT, typename StateT, typename... InputTs>
@@ -125,6 +128,9 @@ struct skip_result_impl
 
 } // namespace detail
 
+//! @defgroup skip
+//! @{
+
 /*!
  * Metafunction that returns a type that can hold both values of type
  *   `skipped_t = StateT`
@@ -141,8 +147,6 @@ struct skip_result_impl
  *
  *   - Otherwise, it returns `skip_state<skipped_t, wrapped_t>`, which
  *     is essentially a type-safe union of these two types.
- *
- * @see skip
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 struct skip_result
@@ -157,27 +161,20 @@ using skip_result_t =
     typename skip_result<ReducingFnT, StateT, InputTs...>::type;
 
 /*!
- * Skip calling the next reducing function in a transducer.  Returns
- * the @a state parameter, potentially wrapped in a value convertible
- * to/from whatever @a call would return for similar parameters.
+ * Skip calling the next reducing function in a transducer.  Returns the `state`
+ * parameter, potentially wrapped in a value convertible to/from whatever `call`
+ * would return for similar parameters.
  *
- * A transducer might or might not call the next reducing function in
- * the chain.  One good example is @a filter, where if the predicate
- * passes, it calls the next reducing function, otherwise it just
- * returns the current state of the reduction.  However, this poses
- * the question: what should be the return type of such a transducer?
- * The next reducing function might wrap the state in a @a
- * state_wrapper to attach its own state to it.  However, we don't
- * know at this point what how to create such a wrapped value.  This
- * method, and @a call, take care of wrapping the state in a type that
- * can hold values of both the current state, and the state that
- * would be returned by the next reducing function. The metafunction
- * @a skip_result defines such a type.
- *
- * @see call
- * @see skip_result_t
- * @see filter
- * @see wrap_state
+ * A transducer might or might not call the next reducing function in the chain.
+ * One good example is `filter`, where if the predicate passes, it calls the
+ * next reducing function, otherwise it just returns the current state of the
+ * reduction.  However, this poses the question: what should be the return type
+ * of such a transducer?  The next reducing function might wrap the state in a
+ * `state_wrapper` to attach its own state to it.  However, we don't know at
+ * this point what how to create such a wrapped value.  This method, and `call`,
+ * take care of wrapping the state in a type that can hold values of both the
+ * current state, and the state that would be returned by the next reducing
+ * function. The metafunction `skip_result` defines such a type.
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 auto skip(ReducingFnT&&, StateT&& state, InputTs&&...)
@@ -193,13 +190,11 @@ auto skip(StateT&& state) -> StateT&&
 }
 
 /*!
- * Call the next reducing function in a transducer that could
- * otherwise skip calling the next reducing function.  Returns the
- * result of calling `step(state, ins...)` wrapped in a type that can
- * also hold plain `state` values.  If @a state is wrapped in such a
- * type, it unwraps it before passing it.
- *
- * @see skip
+ * Call the next reducing function in a transducer that could otherwise skip
+ * calling the next reducing function.  Returns the result of calling
+ * `step(state, ins...)` wrapped in a type that can also hold plain `state`
+ * values.  If `state` is wrapped in such a type, it unwraps it before passing
+ * it.
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
@@ -222,5 +217,7 @@ auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
     return std::forward<ReducingFnT>(step)(std::forward<StateT>(state),
                                            std::forward<InputTs>(ins)...);
 }
+
+//! @}
 
 } // namespace zug

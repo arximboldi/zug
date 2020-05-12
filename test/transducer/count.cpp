@@ -17,11 +17,12 @@ using namespace zug;
 
 TEST_CASE("count, count")
 {
-    using tup = std::tuple<int, std::size_t>;
-    auto v    = std::vector<int>{13, 42, 5};
-
-    auto res = into_vector(count(), v);
-    CHECK(res == (std::vector<tup>{{tup(13, 0u), tup(42, 1u), tup(5, 2u)}}));
+    // example1 {
+    auto v  = std::vector<int>{13, 42, 5};
+    auto r  = into_vector(count(), v);
+    using t = std::vector<std::tuple<int, std::size_t>>;
+    CHECK(r == (t{{13, 0u}, {42, 1u}, {5, 2u}}));
+    // }
 }
 
 TEST_CASE("count, generator")
@@ -32,6 +33,8 @@ TEST_CASE("count, generator")
 
 TEST_CASE("count, stepped")
 {
-    auto res = into_vector(comp(count(1.0, 0.5), take(3)));
-    CHECK(res == (std::vector<double>{{1.0, 1.5, 2.0}}));
+    // example2 {
+    auto r = into_vector(count(1.0, 0.5) | take(5));
+    CHECK(r == (std::vector<double>{{1.0, 1.5, 2.0, 2.5, 3.0}}));
+    // }
 }

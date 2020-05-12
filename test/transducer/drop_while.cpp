@@ -39,6 +39,15 @@ TEST_CASE("drop_while, into")
     }
 }
 
+TEST_CASE("drop_while, example")
+{
+    // example1 {
+    auto v   = std::vector<int>{1, 2, 3, 4, 3, 2, 1};
+    auto res = into_vector(drop_while([](int x) { return x < 4; }), v);
+    CHECK(res == (decltype(res){4, 3, 2, 1}));
+    // }
+}
+
 namespace {
 bool free_lt4(int x) { return x < 4; }
 } // namespace

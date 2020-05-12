@@ -28,7 +28,15 @@ struct map_t
 };
 
 /*!
- * Similar to clojure.core/map$1
+ * Transforms every input using the `mapping` function.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/map.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename MappingT>
 constexpr auto map(MappingT&& mapping)

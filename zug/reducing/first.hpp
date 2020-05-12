@@ -12,16 +12,18 @@
 
 namespace zug {
 
-/*!
- * Reducing function that always returns the initial state.
- */
-ZUG_INLINE_CONSTEXPR struct first_t
+struct first_t
 {
     template <typename StateT, typename... Xs>
     decltype(auto) operator()(StateT&& st, Xs&&...) const
     {
         return ZUG_FWD(st);
     };
-} first{};
+};
+
+/*!
+ * Reducing function that always returns the initial state.
+ */
+ZUG_INLINE_CONSTEXPR first_t first{};
 
 } // namespace zug

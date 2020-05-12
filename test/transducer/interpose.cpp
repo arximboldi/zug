@@ -17,9 +17,11 @@ using namespace zug;
 
 TEST_CASE("interpose, into")
 {
+    // example1 {
     auto v   = std::vector<int>{1, 2, 3, 4, 5};
     auto res = into_vector(interpose(42), v);
     CHECK(res == (decltype(res){1, 42, 2, 42, 3, 42, 4, 42, 5}));
+    // }
 }
 
 TEST_CASE("interpose, termination")

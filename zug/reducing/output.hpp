@@ -15,11 +15,7 @@
 
 namespace zug {
 
-/*!
- * Reducing function that outputs through the iterator that is carried
- * as state.
- */
-ZUG_INLINE_CONSTEXPR struct output_t
+struct output_t
 {
     template <typename It, typename... Inputs>
     It operator()(It it, Inputs&&... ins) const
@@ -27,6 +23,12 @@ ZUG_INLINE_CONSTEXPR struct output_t
         *it = tuplify(ZUG_FWD(ins)...);
         return ++it;
     };
-} output{};
+};
+
+/*!
+ * Reducing function that outputs through the iterator that is carried
+ * as state.
+ */
+ZUG_INLINE_CONSTEXPR output_t output{};
 
 } // namespace zug

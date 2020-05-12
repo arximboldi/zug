@@ -28,6 +28,15 @@ bool free_odd(int x) { return x % 2 == 0; }
 
 using namespace zug;
 
+TEST_CASE("filter, example")
+{
+    // example1 {
+    auto v   = std::vector<int>{1, 2, 3, 4, 5, 6};
+    auto res = into_vector(filter([](int x) { return x % 2; }), v);
+    CHECK(res == decltype(v){1, 3, 5});
+    // }
+}
+
 TEST_CASE("filter, invoke")
 {
     auto v   = std::vector<int>{1, 2, 3, 6};

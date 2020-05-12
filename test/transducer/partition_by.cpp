@@ -40,6 +40,25 @@ TEST_CASE("partition_by, invoke")
     CHECK(res == (decltype(res){{1, 1}, {2, 4, 2}, {3}}));
 }
 
+TEST_CASE("partition_by, example")
+{
+    // example1 {
+    auto v   = std::vector<int>{1, 1, 2, 4, 2, 3};
+    auto res = into_vector(partition_by([](int x) { return x % 2; }), v);
+    using t  = std::vector<std::vector<int>>;
+    CHECK(res == t{{1, 1}, {2, 4, 2}, {3}});
+    // }
+}
+
+TEST_CASE("partition_by, more example")
+{
+    // example2 {
+    auto v   = std::vector<int>{1, 1, 2, 2, 2, 3};
+    auto res = into_vector(partition_by(identity), v);
+    CHECK(res == decltype(res){{1, 1}, {2, 2, 2}, {3}});
+    // }
+}
+
 TEST_CASE("partition_by, partition_by does not copy step function")
 {
     auto step = testing::copy_spy<first_t>{};

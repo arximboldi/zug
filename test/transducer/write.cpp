@@ -9,6 +9,7 @@
 #include <catch2/catch.hpp>
 
 #include <zug/reducing/first.hpp>
+#include <zug/run.hpp>
 #include <zug/transduce.hpp>
 #include <zug/transducer/write.hpp>
 
@@ -19,34 +20,42 @@ using namespace zug;
 
 TEST_CASE("write, write")
 {
+    // example1 {
     auto v      = std::vector<int>{1, 2, 3, 4};
     auto stream = std::stringstream{};
-    transduce(write(stream), first, 0, v);
+    run(write(stream), v);
     CHECK(stream.str() == "1234");
+    // }
 }
 
 TEST_CASE("write, in separator")
 {
+    // example2 {
     auto v      = std::vector<int>{1, 2, 3, 4};
     auto stream = std::stringstream{};
-    transduce(write(stream, ' '), first, 0, v);
+    run(write(stream, ' '), v);
     CHECK(stream.str() == "1 2 3 4");
+    // }
 }
 
 TEST_CASE("write, in separator variadic is arg separator")
 {
+    // example3 {
     auto v1     = std::vector<int>{1, 2, 3, 4};
     auto v2     = std::vector<char>{'y', 'e', 'a', 'h'};
     auto stream = std::stringstream{};
-    transduce(write(stream, ' '), first, 0, v1, v2);
+    run(write(stream, ' '), v1, v2);
     CHECK(stream.str() == "1 y 2 e 3 a 4 h");
+    // }
 }
 
 TEST_CASE("write, in separator and arg separator")
 {
+    // example4 {
     auto v1     = std::vector<int>{1, 2, 3, 4};
     auto v2     = std::vector<char>{'y', 'e', 'a', 'h'};
     auto stream = std::stringstream{};
-    transduce(write(stream, ' ', ','), first, 0, v1, v2);
+    run(write(stream, ' ', ','), v1, v2);
     CHECK(stream.str() == "1,y 2,e 3,a 4,h");
+    // }
 }

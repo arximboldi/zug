@@ -48,6 +48,21 @@ struct distinct_t
     }
 };
 
+/*!
+ * Transducer that removes duplicates from a sequence.
+ *
+ * Note that this transducer uses @f$ O(n) @f$ space (with @f$ n @f$ being the
+ * size of the resulting sequence) since it needs to remember every element in
+ * the sequence to mark whether it's been seen.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/distinct.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+ */
 ZUG_INLINE_CONSTEXPR auto distinct = comp(distinct_t{});
 
 } // namespace zug

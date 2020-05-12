@@ -18,11 +18,11 @@ using namespace zug;
 
 TEST_CASE("remove, simple")
 {
+    // example1 {
     auto v      = std::vector<int>{1, 2, 3, 6};
     auto times2 = [](int x) { return x * 2; };
     auto odd    = [](int x) { return x % 2 == 0; };
-
-    auto res =
-        transduce(comp(remove(odd), map(times2)), std::plus<int>{}, 1, v);
+    auto res    = transduce(remove(odd) | map(times2), std::plus<int>{}, 1, v);
     CHECK(res == 9);
+    // }
 }

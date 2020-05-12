@@ -16,7 +16,15 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/mapcat$1
+ * Equivalent to `cat | map(mapping)`.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/mapcat.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename MappingT>
 auto mapcat(MappingT&& mapping)

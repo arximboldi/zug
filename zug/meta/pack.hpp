@@ -13,6 +13,9 @@
 namespace zug {
 namespace meta {
 
+//! @defgroup meta
+//! @{
+
 /*!
  * MPL-compatible sequence that just holds a vector of types as a
  * paremeter pack.
@@ -20,6 +23,8 @@ namespace meta {
 template <typename... Ts>
 struct pack
 {};
+
+//! @}
 
 /*!
  * Two packs are equal if they are of the same type.
@@ -55,6 +60,9 @@ struct unpack<MF, meta::pack<ArgTs...>>
 
 } // namespace detail
 
+//! @defgroup meta
+//! @{
+
 /*!
  * Metafunction that given a variadic template `MF` and a type `ArgT`,
  * returns `MF<ArgT>`, or if ArgT is of the form `pack<Args...>` then
@@ -65,6 +73,8 @@ using unpack = typename detail::unpack<MF, T>::type;
 
 template <template <typename...> class MF, typename T>
 using unpack_t = typename unpack<MF, T>::type;
+
+//! @}
 
 } // namespace meta
 } // namespace zug

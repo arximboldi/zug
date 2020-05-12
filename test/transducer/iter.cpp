@@ -16,9 +16,21 @@ using namespace zug;
 
 TEST_CASE("iter, generator")
 {
+    // example1 {
     auto v   = std::vector<int>{13, 42, 5};
     auto res = into_vector(iter(v));
     CHECK(res == (std::vector<int>{13, 42, 5}));
+    // }
+}
+
+TEST_CASE("iter, merging")
+{
+    // example2 {
+    auto v1  = std::vector<int>{13, 42, 5, 6, 7};
+    auto v2  = std::vector<std::string>{"one", "two", "three"};
+    auto res = into_vector(iter(v1), v2);
+    CHECK(res == (decltype(res){{"one", 13}, {"two", 42}, {"three", 5}}));
+    // }
 }
 
 TEST_CASE("iter, variadic")

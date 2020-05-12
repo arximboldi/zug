@@ -13,12 +13,20 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/remove$1
+ * Removes elements that pass the predicate.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/remove.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 template <typename PredicateT>
 auto remove(PredicateT&& pred)
 {
-    return filter([=](auto&& x) { return !pred(ZUG_FWD(x)); });
+    return filter([=](auto&&... xs) { return !pred(ZUG_FWD(xs)...); });
 }
 
 } // namespace zug

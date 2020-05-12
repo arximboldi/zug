@@ -14,24 +14,20 @@
 namespace zug {
 
 /*!
- * Given a value `st` that represents the state of a reduction, this
- * function generically dispatches to the right function `UnwrappedFn`
- * or `WrappedFn`, depending of whether the value is already wrapped
- * or not.  This is, during the first iteration of the reduction,
- * `UnwrappedFn` will be called, from then on, `WrappedFnT` will be
- * called.
+ * Given a value `st` that represents the state of a reduction, this function
+ * generically dispatches to the right function `UnwrappedFn` or `WrappedFn`,
+ * depending of whether the value is already wrapped or not.  This is, during
+ * the first iteration of the reduction, `UnwrappedFn` will be called, from then
+ * on, `WrappedFnT` will be called.
  *
  * The signatures should be of the form:
  *
  *   - `UnwrappedFn : A -> B`
  *   - `WrappedFn   : B -> B`
  *
- * This function can dispatch both statically and dynamically in a
- * transparent way.  It is thus very useful for writing stateful
- * transducers that can be type erased in a `transducer<>` object.
- *
- * @see transducer
- * @see take
+ * This function can dispatch both statically and dynamically in a transparent
+ * way.  It is thus very useful for writing stateful transducers that can be
+ * type erased in a `transducer<>` object.
  */
 template <typename StateT, typename UnwrappedFn, typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&&, WrappedFn&& fn)

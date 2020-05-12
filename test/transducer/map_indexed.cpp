@@ -15,9 +15,11 @@ using namespace zug;
 
 TEST_CASE("map_indexed, mapping")
 {
+    // example1 {
     auto v      = std::vector<std::string>{"1", "2", "3", "6"};
     auto timesi = [](std::string x, std::size_t index) {
         return std::stoi(x) * static_cast<int>(index);
     };
     CHECK(transduce(map_indexed(timesi), std::plus<int>{}, 1, v) == 27);
+    // }
 }

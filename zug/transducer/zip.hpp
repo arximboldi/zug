@@ -16,6 +16,14 @@ namespace zug {
 /*!
  * Transducer that, if more than one argument is passed, forwards all
  * of them as a single tuple.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/zip.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
  */
 ZUG_INLINE_CONSTEXPR auto zip = map(tuplify);
 

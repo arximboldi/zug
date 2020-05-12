@@ -1,28 +1,10 @@
 //
-// Copyright (C) 2014, 2015 Ableton AG, Berlin. All rights reserved.
+// zug: transducers for C++
+// Copyright (C) 2019 Juan Pedro Bolivar Puente
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the "Software"),
-// to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following conditions:
+// This software is distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
-//
-
-/*!
- * @file
- */
 
 #pragma once
 
@@ -41,6 +23,20 @@ namespace zug {
  *       since the arguments can be moved into the action.  If we are
  *       not interested in the inputs after the action, this one
  *       should be preferred.
+ *
+ * @rst
+ *   .. literalinclude:: ../test/transducer/sink.cpp
+ *      :language: c++
+ *      :start-after: // example1 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ *   .. literalinclude:: ../test/transducer/sink.cpp
+ *      :language: c++
+ *      :start-after: // example2 {
+ *      :end-before:  // }
+ *      :dedent: 4
+ * @endrst
+
  */
 template <typename ActionT>
 auto sink(ActionT&& action)

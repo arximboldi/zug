@@ -9,15 +9,15 @@
 #include <catch2/catch.hpp>
 
 #include <zug/into_vector.hpp>
-#include <zug/transducer/mapcat.hpp>
+#include <zug/transducer/interleave.hpp>
 
 using namespace zug;
 
-TEST_CASE("mapcat, mapcat")
+TEST_CASE("interleave, example")
 {
     // example1 {
-    auto v   = std::vector<std::vector<int>>{{1, 2}, {3}, {4, 5, 6}};
-    auto res = into_vector(mapcat([](int x) { return x * 2; }), v);
-    CHECK(res == (std::vector<int>{2, 4, 6, 8, 10, 12}));
+    auto v = std::vector<int>{1, 2, 3, 4, 5};
+    auto r = into_vector(interleave, v, v);
+    CHECK(r == decltype(r){1, 1, 2, 2, 3, 3, 4, 4, 5, 5});
     // }
 }

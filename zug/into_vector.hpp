@@ -15,7 +15,12 @@
 namespace zug {
 
 /*!
- * Similar to clojure.core/into-array
+ * Transduces the input `ranges` using `xform`, storing the results in a vector
+ * that is returned.
+ *
+ * The value type of the vector is automatically deduced from the application of
+ * the transducer to the input ranges.  If there are multiple arguments in the
+ * outputs from the transducer, they are combined in an `std::tuple`.
  */
 template <typename XformT, typename... InputRangeTs>
 auto into_vector(XformT&& xform, InputRangeTs&&... ranges) -> std::vector<

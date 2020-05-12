@@ -28,12 +28,25 @@ TEST_CASE("repeat, repeat")
 
 TEST_CASE("repeat, generator")
 {
-    auto res = into_vector(comp(repeat('a'), take(3)));
+    // example1 {
+    auto res = into_vector(repeat('a') | take(3));
     CHECK(res == (std::vector<char>{{'a', 'a', 'a'}}));
+    // }
+}
+
+TEST_CASE("repeat, parallel")
+{
+    // example2 {
+    auto v   = std::vector<int>{1, 2, 3};
+    auto res = into_vector(repeat('a'), v);
+    CHECK(res == decltype(res){{1, 'a'}, {2, 'a'}, {3, 'a'}});
+    // }
 }
 
 TEST_CASE("repeatn, generator")
 {
-    auto res = into_vector(comp(repeatn(3, 'a')));
+    // example3 {
+    auto res = into_vector(repeatn(3, 'a'));
     CHECK(res == (std::vector<char>{{'a', 'a', 'a'}}));
+    // }
 }

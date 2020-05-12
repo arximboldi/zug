@@ -11,6 +11,7 @@
 #include <zug/compose.hpp>
 #include <zug/into_vector.hpp>
 #include <zug/transducer/cat.hpp>
+#include <zug/transducer/map.hpp>
 #include <zug/transducer/readbuf.hpp>
 
 #include <sstream>
@@ -19,14 +20,24 @@ using namespace zug;
 
 TEST_CASE("readbuf, constant sized")
 {
-    auto stream = std::stringstream{"123456"};
-    auto res    = into_vector(comp(readbuf<3>(stream), cat));
-    CHECK(res == (decltype(res){'1', '2', '3', '4', '5', '6'}));
+    // example1 {
+    auto as_str = map([](auto buf) {
+        return std::string{buf.begin(), buf.end()};
+    });
+    auto stream = std::stringstream{"12345"};
+    auto res    = into_vector(readbuf<3>(stream) | as_str);
+    CHECK(res == std::vector<std::string>{"123", "45"});
+    // }
 }
 
 TEST_CASE("readbuf, dynamic sized")
 {
-    auto stream = std::stringstream{"123456"};
-    auto res    = into_vector(comp(readbuf(stream, 3), cat));
-    CHECK(res == (decltype(res){'1', '2', '3', '4', '5', '6'}));
+    // example2 {
+    auto as_str = map([](auto buf) {
+        return std::string{buf.begin(), buf.end()};
+    });
+    auto stream = std::stringstream{"12345"};
+    auto res    = into_vector(readbuf(stream, 3) | as_str);
+    CHECK(res == std::vector<std::string>{"123", "45"});
+    // }
 }
