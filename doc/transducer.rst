@@ -137,6 +137,10 @@ sink
 ----
 .. doxygenfunction:: sink
 
+scan
+----
+.. doxygenfunction:: scan
+
 take
 ----
 .. doxygenfunction:: take
