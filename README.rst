@@ -54,13 +54,13 @@ Example
 
 .. code-block:: c++
 
-   auto xf = zug::filter([](int x) { return x > 0; }),
-           | zug::map([](int x) { return std::to_string(x); }));
+   auto xf = zug::filter([](int x) { return x > 0; })
+           | zug::map([](int x) { return std::to_string(x); });
 
-Here ``xf`` is a *transducer*, a transformation over that can be fed in a
-sequence of integers, resulting in a sequence of strings.  Note, however, that
-this transformation makes no reference to whatever it is transforming.  In fact,
-we can apply it in many ways.
+Here ``xf`` is a *transducer*, a transformation over a sequence of integers,
+resulting in a sequence of strings.  Note, however, that this transformation
+makes no reference to whatever it is transforming.  In fact, we can apply it in
+many ways.
 
 Transforming a range
 ~~~~~~~~~~~~~~~~~~~~
