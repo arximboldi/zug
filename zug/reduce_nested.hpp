@@ -14,6 +14,47 @@
 
 namespace zug {
 
+namespace detail {
+
+template <typename ReducingFnT, typename StateT, typename... InputRangeTs>
+decltype(auto) reduce_nested_dispatched(std::false_type,
+                                  ReducingFnT&& step,
+                                  StateT&& state,
+                                  InputRangeTs&&... ranges)
+{
+    return is_non_empty(ranges...)
+               ? call(
+                     [&](auto&& state) {
+                         return reduce_nested_non_empty(
+                             std::forward<ReducingFnT>(step),
+                             ZUG_FWD(state),
+                             std::forward<InputRangeTs>(ranges)...);
+                     },
+                     ZUG_FWD(state))
+               : skip(ZUG_FWD(state));
+}
+
+/*!
+ * This overload exists only to query it's return type.
+ */
+template <typename ReducingFnT, typename StateT, typename... InputRangeTs>
+decltype(auto) reduce_nested_dispatched(std::true_type,
+                                  ReducingFnT&& step,
+                                  StateT&& state,
+                                  InputRangeTs&&... ranges)
+{
+    return call(
+        [&](auto&& state) {
+            return reduce_nested_non_empty(
+                std::forward<ReducingFnT>(step),
+                ZUG_FWD(state),
+                std::forward<InputRangeTs>(ranges)...);
+        },
+        ZUG_FWD(state));
+}
+
+} // namespace detail
+
 /*!
  * Similar to `reduce`, but it does not unwrap the final state before returning
  * it.  This is useful when calling performing a reduction recursively within a
@@ -26,16 +67,11 @@ template <typename ReducingFnT, typename StateT, typename... InputRangeTs>
 auto reduce_nested(ReducingFnT&& step, StateT&& state, InputRangeTs&&... ranges)
     -> decltype(auto)
 {
-    return detail::is_non_empty(ranges...)
-               ? call(
-                     [&](auto&& state) {
-                         return detail::reduce_nested_non_empty(
-                             std::forward<ReducingFnT>(step),
-                             ZUG_FWD(state),
-                             std::forward<InputRangeTs>(ranges)...);
-                     },
-                     std::forward<StateT>(state))
-               : skip(std::forward<StateT>(state));
+    return detail::reduce_nested_dispatched(
+        std::is_same<std::decay_t<StateT>, meta::bottom>{},
+        ZUG_FWD(step),
+        ZUG_FWD(state),
+        ZUG_FWD(ranges)...);
 }
 
 } // namespace zug

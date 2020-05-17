@@ -14,6 +14,48 @@
 
 namespace zug {
 
+namespace detail {
+
+/*!
+ * Implementation of the most inner lambda body in `filter`
+ *
+ * @note `predicate` and `step` are passed by forwarding reference to preserve
+ *       cv-qualification, they never become moved-from and can only be mutated
+ *       if `operator()` mutates.
+ */
+template <typename PredicateT,
+          typename ReducingFnT,
+          typename StateT,
+          typename... InputTs>
+auto filter_step_dispatched(std::false_type,
+                            PredicateT&& predicate,
+                            ReducingFnT&& step,
+                            StateT&& state,
+                            InputTs&&... ins)
+{
+    return compat::invoke(predicate, ins...)
+               ? call(step, ZUG_FWD(state), ZUG_FWD(ins)...)
+               : skip(step, ZUG_FWD(state), ZUG_FWD(ins)...);
+}
+
+/*!
+ * This overload exists only to query it's return type.
+ */
+template <typename PredicateT,
+          typename ReducingFnT,
+          typename StateT,
+          typename... InputTs>
+auto filter_step_dispatched(std::true_type,
+                            PredicateT&&,
+                            ReducingFnT&& step,
+                            StateT&& state,
+                            InputTs&&... ins)
+{
+    return call(step, ZUG_FWD(state), ZUG_FWD(ins)...);
+}
+
+} // namespace detail
+
 /*!
  * Transducer that removes all inputs that do not pass the `predicate`.
  *
@@ -29,11 +71,15 @@ namespace zug {
 template <typename PredicateT>
 auto filter(PredicateT&& predicate)
 {
-    return comp([=](auto&& step) {
-        return [=, p = predicate](auto&& s, auto&&... is) mutable {
-            return compat::invoke(p, is...)
-                       ? call(step, ZUG_FWD(s), ZUG_FWD(is)...)
-                       : skip(step, ZUG_FWD(s), ZUG_FWD(is)...);
+    return comp([p = ZUG_FWD(predicate)](auto&& step) {
+        return [p = std::move(p), step = ZUG_FWD(step)](auto&& s,
+                                                        auto&&... is) mutable {
+            return detail::filter_step_dispatched(
+                std::is_same<std::decay_t<decltype(s)>, meta::bottom>{},
+                p,
+                step,
+                ZUG_FWD(s),
+                ZUG_FWD(is)...);
         };
     });
 }
