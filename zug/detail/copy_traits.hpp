@@ -13,47 +13,44 @@
 namespace zug {
 namespace detail {
 
-/*!
- * Metafunction that given a metafunction `TraitCheckMf` to check
- * whether a type has a trait, and another `TraitAddMf` to add it to a
- * type, returns `TraitAddMf<DestT>` if `TraitCheckMf<OrigT>`, else
- * `OrigT`.
- */
-template <template <typename> class TraitCheckMF,
-          template <typename>
-          class TraitAddMf,
-          typename OrigT,
-          typename DestT>
-struct copy_trait
-    : std::conditional<TraitCheckMF<OrigT>{},
-                       typename TraitAddMf<DestT>::type,
-                       DestT>
-{};
-
-#define ZUG_DETAIL_DEFINE_COPY_STD_TRAIT(name__)                               \
-    template <typename OrigT, typename DestT>                                  \
-    struct copy_##name__                                                       \
-        : copy_trait<::std::is_##name__, ::std::add_##name__, OrigT, DestT>    \
-    {};                                                                        \
-    template <typename OrigT, typename DestT>                                  \
-    using copy_##name__##_t = typename copy_##name__<OrigT, DestT>::type;      \
-    /**/
-
-ZUG_DETAIL_DEFINE_COPY_STD_TRAIT(lvalue_reference);
-ZUG_DETAIL_DEFINE_COPY_STD_TRAIT(rvalue_reference);
-ZUG_DETAIL_DEFINE_COPY_STD_TRAIT(volatile);
-ZUG_DETAIL_DEFINE_COPY_STD_TRAIT(const);
+template <typename OrigT, typename DestT>
+struct copy_cv {
+    using type = DestT;
+};
 
 template <typename OrigT, typename DestT>
-struct copy_cv : copy_const<OrigT, copy_volatile_t<OrigT, DestT>>
-{};
+struct copy_cv<volatile OrigT, DestT> {
+    using type = volatile DestT;
+};
+
+template <typename OrigT, typename DestT>
+struct copy_cv<const OrigT, DestT> {
+    using type = const DestT;
+};
+
+template <typename OrigT, typename DestT>
+struct copy_cv<const volatile OrigT, DestT> {
+    using type = const volatile DestT;
+};
+
 template <typename OrigT, typename DestT>
 using copy_cv_t = typename copy_cv<OrigT, DestT>::type;
 
 template <typename OrigT, typename DestT>
-struct copy_reference
-    : copy_lvalue_reference<OrigT, copy_rvalue_reference_t<OrigT, DestT>>
-{};
+struct copy_reference {
+    using type = DestT;
+};
+
+template <typename OrigT, typename DestT>
+struct copy_reference<OrigT&, DestT> {
+    using type = DestT&;
+};
+
+template <typename OrigT, typename DestT>
+struct copy_reference<OrigT&&, DestT> {
+    using type = DestT&&;
+};
+
 template <typename OrigT, typename DestT>
 using copy_reference_t = typename copy_reference<OrigT, DestT>::type;
 
