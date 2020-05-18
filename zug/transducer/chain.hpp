@@ -15,8 +15,6 @@
 #include <zug/util.hpp>
 #include <zug/with_state.hpp>
 
-#include <zug/detail/copy_traits.hpp>
-
 namespace zug {
 
 struct chainr_tag
