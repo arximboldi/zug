@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <zug/detail/unreachable.hpp>
+
 #include <type_traits>
 
 namespace zug {
@@ -43,16 +45,27 @@ struct identity
  * can be used as a placeholder for any parameter type in `result_of`
  * metacalls.
  *
- * @note Conversion is not defined. Only use in non-evaluated contexes.
+ * @note Only use in non-evaluated contexes, otherwise behavior is undefined.
  */
 struct bottom
 {
     template <typename T>
-    operator T &&() const;
+    operator T&&() const
+    {
+        ZUG_UNREACHABLE();
+    }
+
     template <typename T>
-    operator T&() const;
+    operator T&() const
+    {
+        ZUG_UNREACHABLE();
+    }
+    
     template <typename T>
-    operator const T&() const;
+    operator const T&() const
+    {
+        ZUG_UNREACHABLE();
+    }
 };
 
 /*!
