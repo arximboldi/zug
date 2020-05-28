@@ -68,7 +68,7 @@ Transforming a range
 .. code-block:: c++
 
    auto data1 = std::vector<int>{3, -2, 42, -10};
-   auto data2 = zug::into(std::vector<std::string>{}, xf, data);
+   auto data2 = zug::into(std::vector<std::string>{}, xf, data1);
    assert(data2 == {"3", "42"});
 
 As a lazy iterator
@@ -77,7 +77,7 @@ As a lazy iterator
 .. code-block:: c++
 
    auto data1 = std::vector<int>{ ... };
-   auto data2 = zug::sequence(xf, data);
+   auto data2 = zug::sequence(xf, data1);
    std::copy(data2.begin(), data2.end(), ...);
 
 Generators and sinks
@@ -121,11 +121,11 @@ expressed as an iterator?  Then, you may have to reimplement all these
 algorithms again, on top of whatever sequence abstraction you have invented, for
 example, see `RxCpp`_...  Or you use transducers.
 
-Transducers these generic algorithms transformations, in a way that is
-completely agnostic of the actual sequence that is being transformed.  As a
-library author, you can add transducer support for your library, and
-automatically get access to our wide `collection of transducers`_ and allow your
-users to simply `write their own`_.
+Transducers are generic algorithmic transformations, in a way that is completely
+agnostic of the actual sequence that is being transformed.  As a library author,
+you can add transducer support for your library, and automatically get access to
+our wide `collection of transducers`_ and allow your users to simply `write
+their own`_.
 
 .. _ranges: https://en.cppreference.com/w/cpp/ranges
 .. _transform: https://en.cppreference.com/w/cpp/algorithm/transform
