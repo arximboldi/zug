@@ -53,7 +53,7 @@ bool state_wrapper_data_is_reduced(iter_tag, T&& iters)
     return get<0>(iters) == get<1>(iters);
 }
 
-auto iter() { return identity_; }
+constexpr auto iter() { return identity_; }
 
 /*!
  * Generator transducer produces the sequence passed as parameter, by
