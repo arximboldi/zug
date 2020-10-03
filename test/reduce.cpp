@@ -36,7 +36,9 @@ struct non_default
 struct foo_tag
 {};
 
-constexpr auto foo = [](auto step) {
+template<typename T>
+constexpr auto foo(T step)
+{
     return [=](auto&& s, auto&&... is) {
         return zug::wrap_state<foo_tag>(
             step(zug::state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
