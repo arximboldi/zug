@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <zug/tuplify.hpp>
 #include <zug/compose.hpp>
 #include <zug/detail/iterator_range.hpp>
 #include <zug/reduce_nested.hpp>
