@@ -1,6 +1,6 @@
-.. image:: https://travis-ci.org/arximboldi/zug.svg?branch=master
-   :target: https://travis-ci.org/arximboldi/zug
-   :alt: Travis Badge
+.. image:: https://github.com/arximboldi/zug/workflows/test/badge.svg
+   :target: https://github.com/arximboldi/zug/actions?query=workflow%3Atest+branch%3Amaster
+   :alt: Github Actions Badge
 
 .. image:: https://codecov.io/gh/arximboldi/zug/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/arximboldi/zug
