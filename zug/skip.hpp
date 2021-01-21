@@ -13,7 +13,13 @@
 
 #include <functional>
 
+#if !defined(ZUG_VARIANT_STD) && !defined(ZUG_VARIANT_BOOST)
+#if __cplusplus >= 201703L
+#define ZUG_VARIANT_STD 1
+#else
 #define ZUG_VARIANT_BOOST 1
+#endif
+#endif
 
 #if ZUG_VARIANT_STD
 #include <variant>
