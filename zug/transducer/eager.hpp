@@ -22,55 +22,50 @@ namespace zug {
 struct eager_tag
 {};
 
-struct eager_t
+namespace detail {
+
+template <typename Algo, typename StepT>
+struct eager_reducing_func_t
 {
-    template <typename Algo>
-    struct uncomposed_transducer_t
+    Algo algo;
+    StepT step;
+
+    template <typename ContainerT>
+    struct tuple_maker_t
     {
-        Algo algo;
+        eager_reducing_func_t* parent;
 
-        template <typename StepT>
-        constexpr auto operator()(StepT&& step) const
+        constexpr auto operator()() const
         {
-            return reducing_func_t<Algo, std::decay_t<StepT>>{algo, step};
-        };
-    };
-
-    template <typename Algo, typename StepT>
-    struct reducing_func_t
-    {
-        Algo algo;
-        StepT step;
-
-        template <typename ContainerT>
-        struct tuple_maker_t
-        {
-            reducing_func_t* parent;
-
-            constexpr auto operator()() const
-            {
-                return std::make_tuple(ContainerT{}, &parent->step, &parent->algo);
-            }
-        };
-
-        template <typename StateT, typename... ItemT>
-        constexpr auto operator()(StateT &&s, ItemT&&... is)
-        {
-            using container_t =
-                std::vector<std::decay_t<decltype(tuplify(is...))>>;
-            auto data = state_data(ZUG_FWD(s), tuple_maker_t<container_t>{this});
-            std::get<0>(data).push_back(tuplify(ZUG_FWD(is)...));
-            return wrap_state<eager_tag>(state_unwrap(ZUG_FWD(s)),
-                                         std::move(data));
+            return std::make_tuple(ContainerT{}, &parent->step, &parent->algo);
         }
     };
 
-    template <typename Algo>
-    constexpr auto operator()(Algo algo) const
+    template <typename StateT, typename... ItemT>
+    constexpr auto operator()(StateT &&s, ItemT&&... is)
     {
-        return comp(uncomposed_transducer_t<Algo>{algo});
+        using container_t =
+            std::vector<std::decay_t<decltype(tuplify(is...))>>;
+        auto data = state_data(ZUG_FWD(s), tuple_maker_t<container_t>{this});
+        std::get<0>(data).push_back(tuplify(ZUG_FWD(is)...));
+        return wrap_state<eager_tag>(state_unwrap(ZUG_FWD(s)),
+                                     std::move(data));
     }
 };
+
+template <typename Algo>
+struct eager_uncomposed_transducer_t
+{
+    Algo algo;
+
+    template <typename StepT>
+    constexpr auto operator()(StepT&& step) const
+    {
+        return eager_reducing_func_t<Algo, std::decay_t<StepT>>{algo, step};
+    };
+};
+
+}
 
 /*!
  * Transducer that processes the whole sequence with the eager algorithm
@@ -80,7 +75,11 @@ struct eager_t
  * Note that this transducer produces no output until completion and uses @f$
  * O(n) @f$ space.
  */
-constexpr auto eager = eager_t{};
+template <typename Algo>
+constexpr auto eager(Algo algo)
+{
+    return comp(detail::eager_uncomposed_transducer_t<Algo>{algo});
+}
 
 template <typename T>
 decltype(auto) state_wrapper_complete(eager_tag, T&& wrapper)
@@ -112,7 +111,7 @@ struct sorted_t
  *      :dedent: 4
  * @endrst
  */
-constexpr auto sorted = eager(sorted_t{});
+ZUG_INLINE_CONSTEXPR auto sorted = eager(sorted_t{});
 
 
 struct reversed_t
@@ -134,6 +133,6 @@ struct reversed_t
  *      :dedent: 4
  * @endrst
  */
-constexpr auto reversed = eager(reversed_t{});
+ZUG_INLINE_CONSTEXPR auto reversed = eager(reversed_t{});
 
 } // namespace zug
