@@ -121,8 +121,11 @@ template <typename ReducingFnT, typename StateT, typename... InputTs>
 struct skip_result_impl
 {
     using skipped_t = StateT;
+#ifdef __cpp_lib_is_invocable
+    using called_t  = std::invoke_result_t<ReducingFnT, StateT, InputTs...>;
+#else
     using called_t  = std::result_of_t<ReducingFnT(StateT, InputTs...)>;
-
+#endif
     using common_type_t = meta::common_type_t<skipped_t, called_t>;
     using error_t       = meta::could_not_find_common_type<skipped_t, called_t>;
 
