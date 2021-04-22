@@ -204,7 +204,7 @@ auto skip(StateT&& state) -> StateT&&
  */
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
-    -> std::enable_if_t<is_skip_state<std::decay_t<StateT>>{},
+    -> std::enable_if_t<is_skip_state<std::decay_t<StateT>>::value,
                         std::decay_t<StateT>>
 {
     return ZUG_VISIT(
@@ -217,7 +217,7 @@ auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
 
 template <typename ReducingFnT, typename StateT, typename... InputTs>
 auto call(ReducingFnT&& step, StateT&& state, InputTs&&... ins)
-    -> std::enable_if_t<!is_skip_state<std::decay_t<StateT>>{},
+    -> std::enable_if_t<!is_skip_state<std::decay_t<StateT>>::value,
                         skip_result_t<ReducingFnT, StateT, InputTs...>>
 {
     return std::forward<ReducingFnT>(step)(std::forward<StateT>(state),
