@@ -219,7 +219,7 @@ template <typename ValueT = detail::deduce_value_type,
           typename... RangeTs>
 auto sequence(XformT&& xform, const RangeTs&... ranges)
     -> sequence_range<typename std::conditional_t<
-                          std::is_same_v<ValueT, detail::deduce_value_type>,
+                          std::is_same<ValueT, detail::deduce_value_type>::value,
                           result_of<XformT, meta::value_t<RangeTs>...>,
                           meta::identity<ValueT>>::type,
                       std::decay_t<XformT>,
