@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
     cmake
     boost
   ];
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage    = "https://github.com/arximboldi/zug";
     description = "library for functional interactive c++ programs";
     license     = licenses.lgpl3Plus;

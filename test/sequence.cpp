@@ -16,19 +16,25 @@
 #include <zug/transducer/map.hpp>
 #include <zug/transducer/take.hpp>
 
-#include <boost/range/algorithm.hpp>
-#include <boost/variant.hpp>
-
+#include <algorithm>
 #include <vector>
 
 using namespace zug;
+
+namespace {
+template <class RangeT, class OutputIt>
+void my_copy(RangeT&& range, OutputIt d_first)
+{
+    std::copy(std::begin(range), std::end(range), d_first);
+}
+} // namespace
 
 TEST_CASE("sequence, identity")
 {
     auto v   = std::vector<int>{1, 2, 3, 4};
     auto r   = std::vector<int>{};
     auto seq = sequence(identity, v);
-    boost::copy(seq, std::back_inserter(r));
+    my_copy(seq, std::back_inserter(r));
     CHECK(r == v);
 }
 
@@ -39,15 +45,15 @@ TEST_CASE("sequence, filter_map")
     auto seq = sequence<int>(comp(filter([](int x) { return x % 2 == 0; }),
                                   map([](int x) { return x * 2; })),
                              v);
-    boost::copy(seq, std::back_inserter(r));
+    my_copy(seq, std::back_inserter(r));
     CHECK(r == (std::vector<int>{{4, 8}}));
 }
 
 TEST_CASE("sequence, rvalues")
 {
     auto r = std::vector<int>{};
-    boost::copy(sequence(identity, std::vector<int>{1, 2, 3, 4}),
-                std::back_inserter(r));
+    my_copy(sequence(identity, std::vector<int>{1, 2, 3, 4}),
+            std::back_inserter(r));
     CHECK(r == (std::vector<int>{1, 2, 3, 4}));
 }
 
@@ -55,7 +61,7 @@ TEST_CASE("sequence, constant")
 {
     const auto v = std::vector<int>{1, 2, 3, 4};
     auto r       = std::vector<int>{};
-    boost::copy(sequence(identity, v), std::back_inserter(r));
+    my_copy(sequence(identity, v), std::back_inserter(r));
     CHECK(r == v);
 }
 
@@ -82,20 +88,20 @@ TEST_CASE("sequence, empty")
     const auto v = std::vector<int>{};
     auto seq     = sequence(take(3), v);
     auto r       = std::vector<int>{};
-    boost::copy(seq, std::back_inserter(r));
+    my_copy(seq, std::back_inserter(r));
     CHECK(r == (decltype(r){}));
 }
 
 TEST_CASE("sequence, variadic growing no type deduction")
 {
-    using res_t = boost::variant<int, std::string>;
+    using res_t = ZUG_VARIANT<int, std::string>;
 
     const auto v1 = std::vector<int>{1, 2, 3, 4};
     const auto v2 = std::vector<std::string>{"a", "b", "c"};
     auto seq      = sequence<res_t>(interleave, v1, v2);
 
     auto r = std::vector<res_t>{};
-    boost::copy(seq, std::back_inserter(r));
+    my_copy(seq, std::back_inserter(r));
     CHECK(
         r ==
         (decltype(r){
