@@ -50,7 +50,7 @@ TEST_CASE("comp: supports transformation between input and output type")
             int>::value,
         "comp should support transformation from array to int");
 
-    auto result = comp(add_one, fst)(std::array<int, 4>{1, 2, 3, 4});
+    auto result = comp(add_one, fst)(std::array<int, 4>{{1, 2, 3, 4}});
     CHECK(result == 2);
 }
 
