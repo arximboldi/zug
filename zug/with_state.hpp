@@ -37,7 +37,7 @@ auto with_state(StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
         std::result_of<WrappedFn(StateT)>>
 {
     return std::forward<WrappedFn>(fn)(std::forward<StateT>(st));
-};
+}
 
 template <typename StateT, typename UnwrappedFn, typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn, WrappedFn &&)
@@ -48,7 +48,7 @@ auto with_state(StateT&& st, UnwrappedFn&& fn, WrappedFn &&)
         std::result_of<UnwrappedFn(StateT)>>
 {
     return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st));
-};
+}
 
 template <typename StateT, typename UnwrappedFn, typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
@@ -64,6 +64,6 @@ auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
         return std::forward<WrappedFn>(fn2)(
             std::forward<StateT>(st).template as<wrapped_state_t>());
     }
-};
+}
 
 } // namespace zug

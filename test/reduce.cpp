@@ -44,7 +44,7 @@ constexpr auto foo(T step)
             step(zug::state_unwrap(ZUG_FWD(s)), ZUG_FWD(is)...),
             non_default{42});
     };
-};
+}
 
 } // namespace
 

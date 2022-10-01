@@ -62,7 +62,7 @@ struct eager_uncomposed_transducer_t
     constexpr auto operator()(StepT&& step) const
     {
         return eager_reducing_func_t<Algo, std::decay_t<StepT>>{algo, step};
-    };
+    }
 };
 
 }

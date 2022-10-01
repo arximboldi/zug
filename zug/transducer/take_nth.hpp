@@ -50,6 +50,6 @@ auto take_nth(IntegralT nth)
                 });
         };
     });
-};
+}
 
 } // namespace zug
