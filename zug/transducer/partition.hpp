@@ -67,7 +67,7 @@ auto partition(SizeT size)
                 std::make_tuple(std::move(next_vector), std::move(next_step)));
         };
     });
-};
+}
 
 template <typename T>
 auto state_wrapper_complete(partition_tag, T&& wrapper)

@@ -57,7 +57,7 @@ TEST_CASE("random_sample, simple")
 TEST_CASE("random_sample, custom generator")
 {
     auto eng = deterministic_engine{};
-    auto gen = [eng]() mutable { return double(eng()) * 2 / eng.max(); };
+    auto gen = [eng]() mutable { return double(eng()) * 2 / double(eng.max()); };
 
     CHECK(transduce(comp(range(20), random_sample(0.5, gen)),
                     std::plus<std::size_t>{},

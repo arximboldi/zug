@@ -22,7 +22,7 @@ struct output_t
     {
         *it = tuplify(ZUG_FWD(ins)...);
         return ++it;
-    };
+    }
 };
 
 /*!

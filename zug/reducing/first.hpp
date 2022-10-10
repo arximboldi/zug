@@ -18,7 +18,7 @@ struct first_t
     decltype(auto) operator()(StateT&& st, Xs&&...) const
     {
         return ZUG_FWD(st);
-    };
+    }
 };
 
 /*!

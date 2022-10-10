@@ -39,7 +39,7 @@ ZUG_INLINE_CONSTEXPR struct identity_t
     decltype(auto) operator()(T&& x) const
     {
         return ZUG_FWD(x);
-    };
+    }
 }
 /*!
  * Function object that returns the value that is passed to it.
@@ -52,7 +52,7 @@ ZUG_INLINE_CONSTEXPR struct identity__t
     auto operator()(T&& x) const
     {
         return ZUG_FWD(x);
-    };
+    }
 }
 /*!
  * Similar to `identity`, but it never returns a reference

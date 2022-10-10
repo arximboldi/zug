@@ -74,7 +74,7 @@ auto partition_by(MappingT&& mapping)
                            std::move(next_step)));
         };
     });
-};
+}
 
 template <typename T>
 auto state_wrapper_complete(partition_by_tag, T&& wrapper)

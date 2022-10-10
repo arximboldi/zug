@@ -141,9 +141,13 @@ This library is written in **C++14** and a compliant compiler is
 necessary.  It is `continuously tested`_ with Clang 3.8 and GCC 6, but
 it might work with other compilers and versions.
 
-No external library is necessary and there are no other requirements.
+If compiling with **C++14** and using `skip`_, boost variant is required.
+
+For **C++17** and above, no external library is necessary and there are no 
+other requirements.
 
 .. _continuously tested: https://travis-ci.org/arximboldi/immer
+.. _skip: https://sinusoid.es/zug/state.html?#skip
 
 Usage
 -----
