@@ -3,7 +3,7 @@ cmake_policy(SET CMP0048 NEW) # enable project VERSION
 cmake_policy(SET CMP0056 NEW) # honor link flags in try_compile()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-project(zug VERSION 0.0.0)
+project(zug VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
