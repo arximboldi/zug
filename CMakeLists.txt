@@ -49,9 +49,9 @@ add_custom_target(check
 
 # the library, local development target
 if(zug_BUILD_TESTS)
+  find_package(Catch2 REQUIRED)
+
   add_library(zug-dev INTERFACE)
-  target_include_directories(zug-dev SYSTEM INTERFACE
-    "$<BUILD_INTERFACE:${zug_SOURCE_DIR}/>/tools/include")
   target_link_libraries(zug-dev INTERFACE zug)
   if (ENABLE_COVERAGE)
     target_compile_options(zug-dev INTERFACE "--coverage")
