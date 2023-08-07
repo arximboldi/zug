@@ -13,6 +13,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments")
 endif()
 
+include(GNUInstallDirs)
+
 option(zug_BUILD_TESTS "Build tests" ON)
 option(zug_BUILD_EXAMPLES "Build examples" ON)
 option(zug_BUILD_DOCS "Build docs" ON)
@@ -35,11 +37,11 @@ add_library(zug INTERFACE)
 target_include_directories(zug INTERFACE
   $<BUILD_INTERFACE:${zug_BINARY_DIR}/>
   $<BUILD_INTERFACE:${zug_SOURCE_DIR}/>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 install(TARGETS zug EXPORT ZugConfig)
-install(EXPORT ZugConfig DESTINATION lib/cmake/Zug)
-install(DIRECTORY zug DESTINATION include)
+install(EXPORT ZugConfig DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Zug")
+install(DIRECTORY zug DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 enable_testing()
 add_custom_target(check
