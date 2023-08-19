@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(zug VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 set(CMAKE_CXX_EXTENSIONS off)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -15,9 +15,15 @@ endif()
 
 include(GNUInstallDirs)
 
+option(DISABLE_WERROR "enable --werror")
+
 option(zug_BUILD_TESTS "Build tests" ON)
 option(zug_BUILD_EXAMPLES "Build examples" ON)
 option(zug_BUILD_DOCS "Build docs" ON)
+
+if (NOT MSVC AND NOT DISABLE_WERROR)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+endif()
 
 #  Targets
 #  =======
