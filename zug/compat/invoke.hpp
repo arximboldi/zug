@@ -9,6 +9,7 @@
 #pragma once
 
 #include <utility>
+#include <type_traits>
 
 namespace zug {
 namespace compat {
@@ -22,20 +23,20 @@ template <class F, class... Args>
 inline auto do_invoke(F&& f, Args&&... args) -> ZUG_DETAIL_DECLTYPE_RETURN(
     std::forward<F>(f)(std::forward<Args>(args)...))
 
-template <class Base, class T, class Derived>
+template <class Base, class T, class Derived, class = std::enable_if_t<!std::is_function<T>::value>>
 inline auto do_invoke(T Base::*pmd, Derived&& ref)
     -> ZUG_DETAIL_DECLTYPE_RETURN(std::forward<Derived>(ref).*pmd)
 
-template <class PMD, class Pointer>
+template <class PMD, class Pointer, class = std::enable_if_t<std::is_member_object_pointer<PMD>::value>>
 inline auto do_invoke(PMD pmd, Pointer&& ptr)
     -> ZUG_DETAIL_DECLTYPE_RETURN((*std::forward<Pointer>(ptr)).*pmd)
 
-template <class Base, class T, class Derived, class... Args>
+template <class Base, class T, class Derived, class... Args, class = std::enable_if_t<std::is_function<T>::value>>
 inline auto do_invoke(T Base::*pmf, Derived&& ref, Args&&... args)
     -> ZUG_DETAIL_DECLTYPE_RETURN((std::forward<Derived>(ref).*
                                    pmf)(std::forward<Args>(args)...))
 
-template <class PMF, class Pointer, class... Args>
+template <class PMF, class Pointer, class... Args, class = std::enable_if_t<std::is_member_function_pointer<PMF>::value>>
 inline auto do_invoke(PMF pmf, Pointer&& ptr, Args&&... args)
     -> ZUG_DETAIL_DECLTYPE_RETURN(((*std::forward<Pointer>(ptr)).*
                                    pmf)(std::forward<Args>(args)...))
