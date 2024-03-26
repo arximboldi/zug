@@ -15,6 +15,7 @@
 #include <zug/state_wrapper.hpp>
 #include <zug/util.hpp>
 
+#include <algorithm>
 #include <vector>
 
 namespace zug {
