@@ -111,7 +111,7 @@ ways. For example:
 Why?
 ----
 
-You have learn Sean Parent's lesson: `No Raw Loops
+You have learned Sean Parent's lesson: `No Raw Loops
 <https://www.youtube.com/watch?v=W2tWOdzgXHA>`_. Instead of iterating over
 sequences directly, you use STL algoriths like `transform`_, `filter`_, etc, or
 even better, the new `ranges`_ library.
