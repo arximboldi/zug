@@ -13,6 +13,8 @@
 
 struct deterministic_engine
 {
+    using result_type = std::uint64_t;
+
     std::uint64_t count = 0;
 
     constexpr static std::uint64_t max()
