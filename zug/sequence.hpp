@@ -46,7 +46,11 @@ struct sequence_data
     };
 
     using reductor_t =
+#if __cplusplus >= 201703L
+        empty_reductor<std::decay_t<std::invoke_result_t<XformT, step_t>>, state_t>;
+#else
         empty_reductor<std::decay_t<std::result_of_t<XformT(step_t)>>, state_t>;
+#endif
 
     sequence_data(const XformT& xform)
         : impl_{std::size_t{}, cache_t{}, reductor_t{xform(step_t{}), this}}

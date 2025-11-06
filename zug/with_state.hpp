@@ -34,7 +34,11 @@ auto with_state(StateT&& st, UnwrappedFn&&, WrappedFn&& fn)
     -> meta::lazy_enable_if_t<
         !std::is_same<std::decay_t<StateT>,
                       std::decay_t<decltype(state_complete(st))>>::value,
+#if __cplusplus >= 201703L
+        std::invoke_result<WrappedFn, StateT>>
+#else
         std::result_of<WrappedFn(StateT)>>
+#endif
 {
     return std::forward<WrappedFn>(fn)(std::forward<StateT>(st));
 }
@@ -45,7 +49,11 @@ auto with_state(StateT&& st, UnwrappedFn&& fn, WrappedFn &&)
         !std::is_same<std::decay_t<StateT>, any_state>::value &&
             std::is_same<std::decay_t<StateT>,
                          std::decay_t<decltype(state_complete(st))>>::value,
+#if __cplusplus >= 201703L
+        std::invoke_result<UnwrappedFn, StateT>>
+#else
         std::result_of<UnwrappedFn(StateT)>>
+#endif
 {
     return std::forward<UnwrappedFn>(fn)(std::forward<StateT>(st));
 }
@@ -54,9 +62,17 @@ template <typename StateT, typename UnwrappedFn, typename WrappedFn>
 auto with_state(StateT&& st, UnwrappedFn&& fn1, WrappedFn&& fn2)
     -> meta::lazy_enable_if_t<
         std::is_same<std::decay_t<StateT>, any_state>::value,
+#if __cplusplus >= 201703L
+        std::invoke_result<UnwrappedFn, StateT>>
+#else
         std::result_of<UnwrappedFn(StateT)>>
+#endif
 {
+#if __cplusplus >= 201703L
+    using wrapped_state_t = std::invoke_result_t<UnwrappedFn, StateT>;
+#else
     using wrapped_state_t = std::result_of_t<UnwrappedFn(StateT)>;
+#endif
 
     if (!st.template has<wrapped_state_t>()) {
         return std::forward<UnwrappedFn>(fn1)(std::forward<StateT>(st));
