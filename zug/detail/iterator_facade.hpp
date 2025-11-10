@@ -116,14 +116,16 @@ public:
         return derived() + n;
     }
 
-    bool operator==(const DerivedT& rhs) const
+    friend bool operator==(const DerivedT& lhs, const DerivedT& rhs)
     {
-        return access_t::equal(derived(), rhs);
+        return access_t::equal(lhs, rhs);
     }
-    bool operator!=(const DerivedT& rhs) const
+#if __cplusplus < 202002L
+    friend bool operator!=(const DerivedT& lhs, const DerivedT& rhs)
     {
-        return !access_t::equal(derived(), rhs);
+        return !access_t::equal(lhs, rhs);
     }
+#endif
 
     DerivedT& operator++()
     {

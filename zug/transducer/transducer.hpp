@@ -179,7 +179,11 @@ public:
             {
                 using xformed_t = typename XformT::result_type;
                 using reduce_t  = std::decay_t<
+#if __cplusplus >= 201703L
+                    std::invoke_result_t<ReducingFnT, StateT, OutputTs...>>;
+#else
                     std::result_of_t<ReducingFnT(StateT, OutputTs...)>>;
+#endif
                 using complete_t = std::decay_t<decltype(
                     state_complete(std::declval<reduce_t>()))>;
                 using tag_t      = detail::transducer_tag<complete_t, reduce_t>;

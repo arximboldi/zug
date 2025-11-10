@@ -118,12 +118,20 @@ private:
 template <typename ReducingFnT, typename InitialStateT, typename... InputTs>
 struct reductor
     : reductor_base<ReducingFnT,
+#if __cplusplus >= 201703L
+                    std::invoke_result_t<ReducingFnT, InitialStateT, InputTs...>,
+#else
                     std::result_of_t<ReducingFnT(InitialStateT, InputTs...)>,
+#endif
                     InputTs...>
 {
     using base_t =
         reductor_base<ReducingFnT,
+#if __cplusplus >= 201703L
+                      std::invoke_result_t<ReducingFnT, InitialStateT, InputTs...>,
+#else
                       std::result_of_t<ReducingFnT(InitialStateT, InputTs...)>,
+#endif
                       InputTs...>;
 
     template <typename ReducingFnT2,

@@ -46,7 +46,11 @@ TEST_CASE("comp: supports transformation between input and output type")
 {
     static_assert(
         std::is_same<
+#if __cplusplus >= 201703L
+            std::invoke_result_t<decltype(comp(add_one, fst)), std::array<int, 4>>,
+#else
             std::result_of_t<decltype(comp(add_one, fst))(std::array<int, 4>)>,
+#endif
             int>::value,
         "comp should support transformation from array to int");
 
