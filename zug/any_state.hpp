@@ -13,6 +13,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <typeinfo>
 
 #if ZUG_TRACE_ANY_STATE_ALLOC
 #include <iostream>
