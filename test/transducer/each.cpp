@@ -6,7 +6,7 @@
 // See accompanying file LICENSE or copy at http://boost.org/LICENSE_1_0.txt
 //
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <zug/into_vector.hpp>
 #include <zug/transducer/each.hpp>

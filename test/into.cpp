@@ -11,7 +11,7 @@
 #include <zug/transducer/filter.hpp>
 #include <zug/transducer/map.hpp>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace zug;
 

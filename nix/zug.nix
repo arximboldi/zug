@@ -5,7 +5,7 @@
   cmake,
   ninja,
   boost,
-  catch2,
+  catch2_3,
   sources ? ../.,
   withTests ? false,
   withExamples ? false,
